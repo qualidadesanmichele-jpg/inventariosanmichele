@@ -1,0 +1,814 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inventário Completo de Equipamentos</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+        }
+        
+        .admin-panel {
+            background: #fff3cd;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border: 1px solid #ffeaa7;
+        }
+        
+        .admin-controls {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        
+        .controls {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        
+        .filter-group {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+        
+        select, input, button {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        
+        button:hover {
+            background: #0056b3;
+        }
+        
+        .stats {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            border-left: 4px solid #007bff;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+            font-size: 12px;
+        }
+        
+        th, td {
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        th {
+            background: #f8f9fa;
+            font-weight: bold;
+            position: sticky;
+            top: 0;
+        }
+        
+        tr:hover {
+            background: #f8f9fa;
+        }
+        
+        .category-badge {
+            display: inline-block;
+            padding: 4px 8px;
+            background: #e9ecef;
+            border-radius: 12px;
+            font-size: 11px;
+        }
+        
+        .editable-input {
+            width: 100%;
+            padding: 4px 6px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 11px;
+        }
+        
+        .editable-input:focus {
+            border-color: #007bff;
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(0,123,255,0.25);
+        }
+        
+        .editable-select {
+            width: 100%;
+            padding: 4px 6px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 11px;
+            background: white;
+        }
+        
+        .cc-pavimento {
+            background: #d4edda;
+            color: #155724;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 11px;
+        }
+        
+        .t-pavimento {
+            background: #d1ecf1;
+            color: #0c5460;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 11px;
+        }
+        
+        .p2-pavimento {
+            background: #fff3cd;
+            color: #856404;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 11px;
+        }
+        
+        .save-btn {
+            background: #28a745;
+            padding: 4px 8px;
+            font-size: 12px;
+        }
+        
+        .save-btn:hover {
+            background: #218838;
+        }
+        
+        .edit-mode {
+            background: #fff3cd;
+        }
+        
+        .login-form {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+        
+        .login-input {
+            padding: 6px 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+        }
+        
+        .modal-content {
+            background-color: white;
+            margin: 15% auto;
+            padding: 30px;
+            border-radius: 8px;
+            width: 400px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+            text-align: center;
+        }
+        
+        .modal h2 {
+            margin-bottom: 20px;
+            color: #333;
+        }
+        
+        .modal-input {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        
+        .modal-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        
+        .modal-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        
+        .modal-btn.primary {
+            background: #007bff;
+            color: white;
+        }
+        
+        .modal-btn.secondary {
+            background: #6c757d;
+            color: white;
+        }
+        
+        .admin-access-btn {
+            background: #ffc107;
+            color: #212529;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            margin-left: auto;
+        }
+        
+        .admin-access-btn:hover {
+            background: #e0a800;
+        }
+        
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+            
+            .container {
+                box-shadow: none;
+                padding: 0;
+            }
+            
+            .controls, .stats, button, .admin-panel, .editable-input, .editable-select, .admin-access-btn {
+                display: none;
+            }
+            
+            table {
+                font-size: 10px;
+            }
+            
+            th, td {
+                padding: 4px;
+            }
+            
+            .printed-info {
+                display: block;
+                font-style: italic;
+                color: #666;
+                font-size: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Modal de Login -->
+    <div id="loginModal" class="modal">
+        <div class="modal-content">
+            <h2>🔐 Acesso Administrativo</h2>
+            <input type="text" id="adminUser" class="modal-input" placeholder="Usuário">
+            <input type="password" id="adminPassword" class="modal-input" placeholder="Senha">
+            <div class="modal-buttons">
+                <button class="modal-btn secondary" onclick="closeModal()">Cancelar</button>
+                <button class="modal-btn primary" onclick="login()">Entrar</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <h1>📊 Inventário Completo de Equipamentos</h1>
+        
+        <!-- Painel de Administração -->
+        <div class="admin-panel" id="adminPanel" style="display: none;">
+            <h3>🔧 Modo Administrativo</h3>
+            <div class="admin-controls">
+                <button onclick="enableEditMode()" id="editBtn">✏️ Habilitar Edição</button>
+                <button onclick="saveAllData()" class="save-btn">💾 Salvar Todas as Alterações</button>
+                <button onclick="exportToExcel()" style="background: #28a745;">📊 Exportar para Excel</button>
+                <button onclick="logout()" style="background: #dc3545;">🚪 Sair do Modo Admin</button>
+                <span id="editStatus" style="color: #856404; font-weight: bold;"></span>
+            </div>
+        </div>
+        
+        <div class="controls">
+            <div class="filter-group">
+                <select id="filterCategory">
+                    <option value="">Todas as Categorias</option>
+                </select>
+                
+                <select id="filterPavimento">
+                    <option value="">Todos os Pavimentos</option>
+                </select>
+                
+                <input type="text" id="searchInput" placeholder="Buscar equipamento...">
+                
+                <button onclick="filterTable()">🔍 Filtrar</button>
+                <button onclick="clearFilters()">🔄 Limpar</button>
+            </div>
+            
+            <button onclick="window.print()" style="background: #17a2b8;">🖨️ Imprimir Inventário</button>
+            <button class="admin-access-btn" onclick="openModal()">🔑 Acesso Admin</button>
+        </div>
+        
+        <div class="stats" id="stats">
+            <!-- Estatísticas serão preenchidas via JavaScript -->
+        </div>
+        
+        <table id="inventoryTable">
+            <thead>
+                <tr>
+                    <th width="12%">Categoria</th>
+                    <th width="25%">Modelo</th>
+                    <th width="10%">Pavimento</th>
+                    <th width="20%">Localização</th>
+                    <th width="18%">Nota Fiscal</th>
+                    <th width="15%">Observações</th>
+                </tr>
+            </thead>
+            <tbody id="tableBody">
+                <!-- Dados serão preenchidos via JavaScript -->
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        // CREDENCIAIS DO ADMIN
+        const ADMIN_CREDENTIALS = {
+            user: "admin",
+            password: "admin123"
+        };
+        
+        // Dados do inventário COMPLETO
+        const inventoryData = [
+            // ROTEADORES (21 equipamentos)
+            { categoria: "Roteador", modelo: "Ubiquiti U6 Pro", pavimento: "T", localizacao: "Corredor Direito", notaFiscal: "", observacoes: "" },
+            { categoria: "Roteador", modelo: "Ubiquiti U6 Pro", pavimento: "T", localizacao: "Corredor Exames Cdof", notaFiscal: "", observacoes: "" },
+            { categoria: "Roteador", modelo: "Ubiquiti U6 Pro", pavimento: "", localizacao: "", notaFiscal: "", observacoes: "" },
+            { categoria: "Roteador", modelo: "Ubiquiti U6 Pro", pavimento: "", localizacao: "", notaFiscal: "", observacoes: "" },
+            { categoria: "Roteador", modelo: "Ubiquiti U6 Pro", pavimento: "", localizacao: "", notaFiscal: "", observacoes: "" },
+            { categoria: "Roteador", modelo: "Ubiquiti U6 Pro", pavimento: "", localizacao: "", notaFiscal: "", observacoes: "" },
+            { categoria: "Roteador", modelo: "Ubiquiti U6 Pro", pavimento: "", localizacao: "", notaFiscal: "", observacoes: "" },
+            { categoria: "Roteador", modelo: "Ubiquiti U6 Pro", pavimento: "", localizacao: "", notaFiscal: "", observacoes: "" },
+            { categoria: "Roteador", modelo: "Ubiquiti U6 Pro", pavimento: "", localizacao: "", notaFiscal: "", observacoes: "" },
+            { categoria: "Roteador", modelo: "Ubiquiti U6 Pro", pavimento: "", localizacao: "", notaFiscal: "", observacoes: "" },
+            { categoria: "Roteador", modelo: "Ubiquiti U6 Pro", pavimento: "", localizacao: "", notaFiscal: "", observacoes: "" },
+            { categoria: "Roteador", modelo: "Ubiquiti U6 Pro", pavimento: "", localizacao: "", notaFiscal: "", observacoes: "" },
+            { categoria: "Roteador", modelo: "Ubiquiti U6 Pro", pavimento: "", localizacao: "", notaFiscal: "", observacoes: "" },
+            { categoria: "Roteador", modelo: "Ubiquiti U6 Pro", pavimento: "", localizacao: "", notaFiscal: "", observacoes: "" },
+            { categoria: "Roteador", modelo: "Ubiquiti U6 Pro", pavimento: "", localizacao: "", notaFiscal: "", observacoes: "" },
+            { categoria: "Roteador", modelo: "Ubiquiti U6 Pro", pavimento: "", localizacao: "", notaFiscal: "", observacoes: "" },
+            { categoria: "Roteador", modelo: "Ubiquiti U6 Pro", pavimento: "", localizacao: "", notaFiscal: "", observacoes: "" },
+            { categoria: "Roteador", modelo: "Ubiquiti U6 Pro", pavimento: "", localizacao: "", notaFiscal: "", observacoes: "" },
+            { categoria: "Roteador", modelo: "Ubiquiti U6 Pro", pavimento: "", localizacao: "", notaFiscal: "", observacoes: "" },
+            { categoria: "Roteador", modelo: "Ubiquiti U6 Pro", pavimento: "", localizacao: "", notaFiscal: "", observacoes: "" },
+            { categoria: "Roteador", modelo: "Ubiquiti U6 Pro", pavimento: "", localizacao: "", notaFiscal: "", observacoes: "" },
+
+            // SWITCHES (16 equipamentos)
+            { categoria: "Switch", modelo: "TPlink SG3452", pavimento: "", localizacao: "", notaFiscal: "", observacoes: "" },
+            { categoria: "Switch", modelo: "TPlink SG3452", pavimento: "", localizacao: "", notaFiscal: "", observacoes: "" },
+            { categoria: "Switch", modelo: "TPlink SG3452", pavimento: "", localizacao: "", notaFiscal: "", observacoes: "" },
+            { categoria: "Switch", modelo: "TPlink SG3452", pavimento: "", localizacao: "", notaFiscal: "", observacoes: "" },
+            { categoria: "Switch", modelo: "TPlink SG3452", pavimento: "", localizacao: "", notaFiscal: "", observacoes: "" },
+            { categoria: "Switch", modelo: "TPlink SG3452", pavimento: "", localizacao: "", notaFiscal: "", observacoes: "" },
+            { categoria: "Switch", modelo: "TPlink SG3452", pavimento: "", localizacao: "", notaFiscal: "", observacoes: "" },
+            { categoria: "Switch", modelo: "TPlink SG3452", pavimento: "", localizacao: "", notaFiscal: "", observacoes: "" },
+            { categoria: "Switch", modelo: "TPlink SG3452", pavimento: "", localizacao: "", notaFiscal: "", observacoes: "" },
+            { categoria: "Switch", modelo: "TPlink SG3452", pavimento: "", localizacao: "", notaFiscal: "", observacoes: "" },
+            { categoria: "Switch", modelo: "Hikvision", pavimento: "", localizacao: "", notaFiscal: "", observacoes: "" },
+            { categoria: "Switch", modelo: "Hikvision", pavimento: "", localizacao: "", notaFiscal: "", observacoes: "" },
+            { categoria: "Switch", modelo: "Hikvision", pavimento: "", localizacao: "", notaFiscal: "", observacoes: "" },
+            { categoria: "Switch", modelo: "Hikvision", pavimento: "", localizacao: "", notaFiscal: "", observacoes: "" },
+            { categoria: "Switch", modelo: "Hikvision", pavimento: "", localizacao: "", notaFiscal: "", observacoes: "" },
+            { categoria: "Switch", modelo: "Hikvision", pavimento: "", localizacao: "", notaFiscal: "", observacoes: "" },
+
+            // COMPUTADORES (47 equipamentos)
+            { categoria: "Computador", modelo: "Dell AIO 5430", pavimento: "", localizacao: "", notaFiscal: "", observacoes: "" },
+            { categoria: "Computador", modelo: "Dell AIO 5430", pavimento: "", localizacao: "", notaFiscal: "", observacoes: "" },
+            { categoria: "Computador", modelo: "Dell AIO 5430", pavimento: "", localizacao: "", notaFiscal: "", observacoes: "" },
+            { categoria: "Computador", modelo: "Dell AIO 5430", pavimento: "", localizacao: "", notaFiscal: "", observacoes: "" },
+            { categoria: "Computador", modelo: "Dell AIO 5430", pavimento: "", localizacao: "", notaFiscal: "", observacoes: "" },
+            { categoria: "Computador", modelo: "Dell AIO 5430", pavimento: "", localizacao: "", notaFiscal: "", observacoes: "" },
+            { categoria: "Computador", modelo: "Dell AIO 5430", pavimento: "", localizacao: "", notaFiscal: "", observacoes: "" },
+            { categoria: "Computador", modelo: "Dell AIO 5430", pavimento: "", localizacao: "", notaFiscal: "", observacoes: "" },
+            { categoria: "Computador", modelo: "Dell AIO 5430", pavimento: "", localizacao: "", notaFiscal: "", observacoes: "" },
+            { categoria: "Computador", modelo: "Dell AIO 5430", pavimento: "", localizacao: "", notaFiscal: "", observacoes: "" },
+            { categoria: "Computador", modelo: "Dell AIO 5430", pavimento: "", localizacao: "", notaFiscal: "", observacoes: "" },
+            { categoria: "Computador", modelo: "Dell AIO 5430", pavimento: "", localizacao: "", notaFiscal: "", observacoes: "" },
+            { categoria: "Computador", modelo: "Dell AIO 5430", pavimento: "", localizacao: "", notaFiscal: "", observacoes: "" },
+            { categoria: "Computador", modelo: "Dell AIO 5430", pavimento: "", localizacao: "", notaFiscal: "", observacoes: "" },
+            { categoria: "Computador", modelo: "Dell AIO 5430", pavimento: "", localizacao: "", notaFiscal: "", observacoes: "" },
+            { categoria: "Computador", modelo: "Dell AIO 5430", pavimento: "", localizacao: "", notaFiscal: "", observacoes: "" },
+            { categoria: "Computador", modelo: "Dell AIO 5430", pavimento: "", localizacao: "", notaFiscal: "", observacoes: "" },
+            { categoria: "Computador", modelo: "Dell AIO 5430", pavimento: "", localizacao: "", notaFiscal: "", observacoes: "" },
+            { categoria: "Computador", modelo: "Dell AIO 5430", pavimento: "", localizacao: "", notaFiscal: "", observacoes: "" },
+            { categoria: "Computador", modelo: "Dell AIO 5430", pavimento: "", localizacao: "", notaFiscal: "", observacoes: "" },
+            { categoria: "Computador", modelo: "Dell AIO 5430", pavimento: "", localizacao: "", notaFiscal: "", observacoes: "" },
+            { categoria: "Computador", modelo: "Dell AIO 5430", pavimento: "", localizacao: "", notaFiscal: "", observacoes: "" },
+            { categoria: "Computador", modelo: "Dell AIO 5430", pavimento: "", localizacao: "", notaFiscal: "", observacoes: "" },
+            { categoria: "Computador", modelo: "Dell AIO 5430", pavimento: "", localizacao: "", notaFiscal: "", observacoes: "" },
+            { categoria: "Computador", modelo: "Dell AIO 5430", pavimento: "", localizacao: "", notaFiscal: "", observacoes: "" },
+            { categoria: "Computador", modelo: "Dell AIO 5430", pavimento: "", localizacao: "", notaFiscal: "", observacoes: "" },
+            { categoria: "Computador", modelo: "Dell AIO 5430", pavimento: "", localizacao: "", notaFiscal: "", observacoes: "" },
+            { categoria: "Computador", modelo: "Dell AIO 5430", pavimento: "", localizacao: "", notaFiscal: "", observacoes: "" },
+            { categoria: "Computador", modelo: "Dell AIO 5430", pavimento: "", localizacao: "", notaFiscal: "", observacoes: "" },
+            { categoria: "Computador", modelo: "Dell AIO 5430", pavimento: "", localizacao: "", notaFiscal: "", observacoes: "" },
+            { categoria: "Computador", modelo: "Dell AIO 5430", pavimento: "", localizacao: "", notaFiscal: "", observacoes: "" },
+            { categoria: "Computador", modelo: "Dell AIO 5430", pavimento: "", localizacao: "", notaFiscal: "", observacoes: "" },
+            { categoria: "Computador", modelo: "Dell AIO 5430", pavimento: "", localizacao: "", notaFiscal: "", observacoes: "" },
+            { categoria: "Computador", modelo: "Dell Optiplex 7050 Micro", pavimento: "", localizacao: "", notaFiscal: "", observacoes: "" },
+            { categoria: "Computador", modelo: "Dell Optiplex 7050 Micro", pavimento: "", localizacao: "", notaFiscal: "", observacoes: "" },
+            { categoria: "Computador", modelo: "Dell Optiplex 7010 Micro", pavimento: "", localizacao: "", notaFiscal: "", observacoes: "" },
+            { categoria: "Computador", modelo: "Dell Optiplex 7010 Micro", pavimento: "", localizacao: "", notaFiscal: "", observacoes: "" },
+
+            // NOTEBOOKS (11 equipamentos)
+            { categoria: "Notebook", modelo: "Dell Inspiron 15 3520", pavimento: "", localizacao: "", notaFiscal: "", observacoes: "" },
+            { categoria: "Notebook", modelo: "Dell Inspiron 15 3520", pavimento: "", localizacao: "", notaFiscal: "", observacoes: "" },
+            { categoria: "Notebook", modelo: "Dell Inspiron 15 3520", pavimento: "", localizacao: "", notaFiscal: "", observacoes: "" },
+            { categoria: "Notebook", modelo: "Dell Inspiron 15 3520", pavimento: "", localizacao: "", notaFiscal: "", observacoes: "" },
+            { categoria: "Notebook", modelo: "Dell Inspiron 15 3520", pavimento: "", localizacao: "", notaFiscal: "", observacoes: "" },
+            { categoria: "Notebook", modelo: "Dell Inspiron 15 3520", pavimento: "", localizacao: "", notaFiscal: "", observacoes: "" },
+            { categoria: "Notebook", modelo: "Dell Inspiron 15 3520", pavimento: "", localizacao: "", notaFiscal: "", observacoes: "" },
+            { categoria: "Notebook", modelo: "Dell Inspiron 15 3530", pavimento: "", localizacao: "", notaFiscal: "", observacoes: "" },
+            { categoria: "Notebook", modelo: "Acer Aspire 5", pavimento: "", localizacao: "", notaFiscal: "", observacoes: "" },
+            { categoria: "Notebook", modelo: "Acer Aspire 5", pavimento: "", localizacao: "", notaFiscal: "", observacoes: "" },
+            { categoria: "Notebook", modelo: "Acer Aspire 5", pavimento: "", localizacao: "", notaFiscal: "", observacoes: "" },
+
+            // MÁQUINAS MÉDICAS ORIGINAIS (22 equipamentos)
+            { categoria: "Máquinas Médicas", modelo: "Argos", pavimento: "T", localizacao: "Cdof - Exame 01", notaFiscal: "", observacoes: "" },
+            { categoria: "Máquinas Médicas", modelo: "Galilei", pavimento: "T", localizacao: "Cdof - Exame 02", notaFiscal: "", observacoes: "" },
+            { categoria: "Máquinas Médicas", modelo: "Laser Retina", pavimento: "T", localizacao: "Cdof - Exame 03", notaFiscal: "", observacoes: "" },
+            { categoria: "Máquinas Médicas", modelo: "Estereofoto", pavimento: "T", localizacao: "Cdof - Exame 04", notaFiscal: "", observacoes: "" },
+            { categoria: "Máquinas Médicas", modelo: "Yag Laser", pavimento: "T", localizacao: "Cdof - Exame 05", notaFiscal: "", observacoes: "" },
+            { categoria: "Máquinas Médicas", modelo: "Topografia", pavimento: "T", localizacao: "Cdof - Exame 06", notaFiscal: "", observacoes: "" },
+            { categoria: "Máquinas Médicas", modelo: "Paquimetria", pavimento: "T", localizacao: "Cdof - Exame 07", notaFiscal: "", observacoes: "" },
+            { categoria: "Máquinas Médicas", modelo: "Campimetria", pavimento: "T", localizacao: "Cdof - Exame 08", notaFiscal: "", observacoes: "" },
+            { categoria: "Máquinas Médicas", modelo: "Bioimetria Ultrassonica", pavimento: "T", localizacao: "Cdof - Exame 09", notaFiscal: "", observacoes: "" },
+            { categoria: "Máquinas Médicas", modelo: "Ultrasson", pavimento: "T", localizacao: "Cdof - Exame 11", notaFiscal: "", observacoes: "" },
+            { categoria: "Máquinas Médicas", modelo: "Auto Refrator/Auto Kerato", pavimento: "T", localizacao: "Recepção Pré - Consulta", notaFiscal: "", observacoes: "" },
+            { categoria: "Máquinas Médicas", modelo: "Tonometro Do Sopro", pavimento: "T", localizacao: "Recepção Pré - Consulta", notaFiscal: "", observacoes: "" },
+            { categoria: "Máquinas Médicas", modelo: "Lensometro/ Lensmeter Digital", pavimento: "T", localizacao: "Recepção Pré - Consulta", notaFiscal: "", observacoes: "" },
+            { categoria: "Máquinas Médicas", modelo: "Lâmpada De Fenda Topcon", pavimento: "T", localizacao: "Consultório 3", notaFiscal: "", observacoes: "" },
+            { categoria: "Máquinas Médicas", modelo: "Cadeira Xenonio", pavimento: "T", localizacao: "Consultório 3", notaFiscal: "", observacoes: "" },
+            { categoria: "Máquinas Médicas", modelo: "Refrator Manuel Topcon", pavimento: "T", localizacao: "Consultório 3", notaFiscal: "", observacoes: "" },
+            { categoria: "Máquinas Médicas", modelo: "Lâmpada De Fenda Topcon", pavimento: "T", localizacao: "Consultório 1", notaFiscal: "", observacoes: "" },
+            { categoria: "Máquinas Médicas", modelo: "Cadeira Xenonio", pavimento: "T", localizacao: "Consultório 1", notaFiscal: "", observacoes: "" },
+            { categoria: "Máquinas Médicas", modelo: "Refrator Manuel Topcon", pavimento: "T", localizacao: "Consultório 1", notaFiscal: "", observacoes: "" },
+            { categoria: "Máquinas Médicas", modelo: "Lâmpada De Fenda Apramed", pavimento: "T", localizacao: "Consultório 2", notaFiscal: "", observacoes: "" },
+            { categoria: "Máquinas Médicas", modelo: "Cadeira Apramed", pavimento: "T", localizacao: "Consultório 2", notaFiscal: "", observacoes: "" },
+            { categoria: "Máquinas Médicas", modelo: "Refrator Manuel Topcon", pavimento: "T", localizacao: "Consultório 2", notaFiscal: "", observacoes: "" },
+
+            // CONTROLE DE ACESSO (6 equipamentos)
+            { categoria: "Controle De Acesso", modelo: "SS 3420 MF BIO", pavimento: "Não Especificado!", localizacao: "Elevador 7 Paradas SS2", notaFiscal: "", observacoes: "" },
+            { categoria: "Controle De Acesso", modelo: "SS 3420 MF BIO", pavimento: "T", localizacao: "Elevador 7 Paradas Térreo", notaFiscal: "", observacoes: "" },
+            { categoria: "Controle De Acesso", modelo: "SS 3420 MF BIO", pavimento: "Não Especificado!", localizacao: "Elevador 7 Paradas SS1", notaFiscal: "", observacoes: "" },
+            { categoria: "Controle De Acesso", modelo: "SS 3420 MF BIO", pavimento: "Não Especificado!", localizacao: "Elevador 5 Paradas", notaFiscal: "", observacoes: "" },
+            { categoria: "Controle De Acesso", modelo: "CT 3000 4PB", pavimento: "P2", localizacao: "Catraca Segundo Piso", notaFiscal: "", observacoes: "" },
+            { categoria: "Controle De Acesso", modelo: "SS 3420 MF BIO", pavimento: "Não Especificado!", localizacao: "Acesso Funcionários SS1", notaFiscal: "", observacoes: "" },
+
+            // EQUIPAMENTOS DO CENTRO CIRÚRGICO (CC) - 39 equipamentos
+            { categoria: "Máquinas Médicas", modelo: "CARDIOVERSOR UMED20 (MINDRAY)", pavimento: "CC", localizacao: "", notaFiscal: "", observacoes: "" },
+            { categoria: "Máquinas Médicas", modelo: "CARDIOVERSOR UMED20 (MINDRAY)", pavimento: "CC", localizacao: "", notaFiscal: "", observacoes: "" },
+            { categoria: "Máquinas Médicas", modelo: "FOCO CIRURGICO ACCESS 400/400 SF 1011 (VOLISTA)", pavimento: "CC", localizacao: "", notaFiscal: "", observacoes: "" },
+            { categoria: "Máquinas Médicas", modelo: "FOCO CIRURGICO ACCESS 400/400 SF 1011 (VOLISTA)", pavimento: "CC", localizacao: "", notaFiscal: "", observacoes: "" },
+            { categoria: "Máquinas Médicas", modelo: "FOCO CIRURGICO ACCESS 400/400 SF 1011 (VOLISTA)", pavimento: "CC", localizacao: "", notaFiscal: "", observacoes: "" },
+            { categoria: "Máquinas Médicas", modelo: "MONITOR MULTIPARÂMETRO UMEC-12 (MINDRAY)", pavimento: "CC", localizacao: "", notaFiscal: "", observacoes: "" },
+            { categoria: "Máquinas Médicas", modelo: "ESTATIVA DE TETO MODUEVO PLG II (GETINGE)", pavimento: "CC", localizacao: "", notaFiscal: "", observacoes: "" },
+            { categoria: "Máquinas Médicas", modelo: "APARELHO DE ANESTESIA WATO EX-35 (MINDRAY)", pavimento: "CC", localizacao: "", notaFiscal: "", observacoes: "" },
+            { categoria: "Máquinas Médicas", modelo: "MESA OFTALMOLOGICA ZNZ100 (APRAMED)", pavimento: "CC", localizacao: "", notaFiscal: "", observacoes: "" },
+            { categoria: "Máquinas Médicas", modelo: "ESTATIVA DE TETO MODUEVO PLG II (GETINGE)", pavimento: "CC", localizacao: "", notaFiscal: "", observacoes: "" },
+            { categoria: "Máquinas Médicas", modelo: "MICROSCÓPIO CIRÚRGICO CARL ZEISS (-)", pavimento: "CC", localizacao: "", notaFiscal: "", observacoes: "" },
+            { categoria: "Máquinas Médicas", modelo: "APARELHO DE ANESTESIA WATO EX-35 (MINDRAY)", pavimento: "CC", localizacao: "", notaFiscal: "", observacoes: "" },
+            { categoria: "Máquinas Médicas", modelo: "MESA CIRÚRGICA MAQUET LYRA (GETINGE)", pavimento: "CC", localizacao: "", notaFiscal: "", observacoes: "" },
+            { categoria: "Máquinas Médicas", modelo: "MESA CIRÚRGICA MAQUET LYRA (GETINGE)", pavimento: "CC", localizacao: "", notaFiscal: "", observacoes: "" },
+            { categoria: "Máquinas Médicas", modelo: "CONSTELLATION VISION SYSTEM (ALCON)", pavimento: "CC", localizacao: "", notaFiscal: "", observacoes: "" },
+            { categoria: "Máquinas Médicas", modelo: "DESFIBRILADOR EXTERNO AUTOMÁTICO ION (INSTRAMED)", pavimento: "CC", localizacao: "", notaFiscal: "", observacoes: "" },
+            { categoria: "Máquinas Médicas", modelo: "BISTURI ELETRÔNICO SS-501 SX (WEM)", pavimento: "CC", localizacao: "", notaFiscal: "", observacoes: "" },
+            { categoria: "Máquinas Médicas", modelo: "BISTURI ELETRÔNICO SS-501 SX (WEM)", pavimento: "CC", localizacao: "", notaFiscal: "", observacoes: "" },
+            { categoria: "Máquinas Médicas", modelo: "FONTE DE LUZ L9000 (STRYKER)", pavimento: "CC", localizacao: "", notaFiscal: "", observacoes: "" },
+            { categoria: "Máquinas Médicas", modelo: "PROCESSADORA DE VIDEO 1588 (STRYKER)", pavimento: "CC", localizacao: "", notaFiscal: "", observacoes: "" },
+            { categoria: "Máquinas Médicas", modelo: "INSUFLADOR PNEUMO SURE XL (STRYKER)", pavimento: "CC", localizacao: "", notaFiscal: "", observacoes: "" },
+            { categoria: "Máquinas Médicas", modelo: "CONSOLE DE ARTROSCOPIA 5400-50 (STRYKER)", pavimento: "CC", localizacao: "", notaFiscal: "", observacoes: "" },
+            { categoria: "Máquinas Médicas", modelo: "SISTEMA DE VISUALIZAÇÃO 3D NOENUITY (ALCON)", pavimento: "CC", localizacao: "", notaFiscal: "", observacoes: "" },
+            { categoria: "Máquinas Médicas", modelo: "MICROSCÓPIO CIRÚRGICO OPMI LUMERA I (CARL ZEISS MEDITEC AG)", pavimento: "CC", localizacao: "", notaFiscal: "", observacoes: "" },
+            { categoria: "Máquinas Médicas", modelo: "CENTURION VISION SYSTEM (ALCON)", pavimento: "CC", localizacao: "", notaFiscal: "", observacoes: "" },
+            { categoria: "Máquinas Médicas", modelo: "MONITOR MULTIPARÂMETRO UMEC-12 (MINDRAY)", pavimento: "CC", localizacao: "", notaFiscal: "", observacoes: "" },
+            { categoria: "Máquinas Médicas", modelo: "OXIMETRO DE DEDO 512FLH (MINDRAY)", pavimento: "CC", localizacao: "", notaFiscal: "", observacoes: "" },
+            { categoria: "Máquinas Médicas", modelo: "OXIMETRO DE DEDO 512FLH (MINDRAY)", pavimento: "CC", localizacao: "", notaFiscal: "", observacoes: "" },
+            { categoria: "Máquinas Médicas", modelo: "ARCO CIRURGICO UNIQUE CLASS (IMEX MEDICAL)", pavimento: "CC", localizacao: "", notaFiscal: "", observacoes: "" },
+            { categoria: "Máquinas Médicas", modelo: "CANETA DE BISTURI MANUAL (SC)", pavimento: "CC", localizacao: "", notaFiscal: "", observacoes: "" },
+            { categoria: "Máquinas Médicas", modelo: "EQUIPO PRIMAX CART 04 PONTAS N 737 (DENT CLER)", pavimento: "CC", localizacao: "", notaFiscal: "", observacoes: "" },
+            { categoria: "Máquinas Médicas", modelo: "MESA OFTALMOLOGICA MAQUET LYRA (GETINGE)", pavimento: "CC", localizacao: "", notaFiscal: "", observacoes: "" },
+            { categoria: "Máquinas Médicas", modelo: "BISTURI ELETRÔNICO SS-501 SX (WEM)", pavimento: "CC", localizacao: "", notaFiscal: "", observacoes: "" },
+            { categoria: "Máquinas Médicas", modelo: "BISTURI ELETRÔNICO HF-120 (WEM)", pavimento: "CC", localizacao: "", notaFiscal: "", observacoes: "" },
+            { categoria: "Máquinas Médicas", modelo: "UNIDADE DE AQUECIMENTO VITIGOV (WARMTOUCH)", pavimento: "CC", localizacao: "", notaFiscal: "", observacoes: "" },
+            { categoria: "Máquinas Médicas", modelo: "PINÇA COM CABO - (-)", pavimento: "CC", localizacao: "", notaFiscal: "", observacoes: "" },
+            { categoria: "Máquinas Médicas", modelo: "CANETA DE BISTURI MANUAL (SC)", pavimento: "CC", localizacao: "", notaFiscal: "", observacoes: "" },
+            { categoria: "Máquinas Médicas", modelo: "APARELHO DE ANESTESIA EX 65 (MINDRAY)", pavimento: "CC", localizacao: "", notaFiscal: "", observacoes: "" },
+            { categoria: "Máquinas Médicas", modelo: "VALVILLA DE INTROGENIO RD-29N (WHITE MARTINS)", pavimento: "CC", localizacao: "", notaFiscal: "", observacoes: "" }
+        ];
+
+        let isEditMode = false;
+        let isAdmin = false;
+
+        function openModal() {
+            document.getElementById('loginModal').style.display = 'block';
+        }
+
+        function closeModal() {
+            document.getElementById('loginModal').style.display = 'none';
+            document.getElementById('adminUser').value = '';
+            document.getElementById('adminPassword').value = '';
+        }
+
+        function login() {
+            const user = document.getElementById('adminUser').value;
+            const password = document.getElementById('adminPassword').value;
+            
+            if (user === ADMIN_CREDENTIALS.user && password === ADMIN_CREDENTIALS.password) {
+                isAdmin = true;
+                document.getElementById('adminPanel').style.display = 'block';
+                closeModal();
+                alert('Modo administrativo ativado!');
+            } else {
+                alert('Usuário ou senha incorretos!');
+            }
+        }
+
+        function logout() {
+            isAdmin = false;
+            isEditMode = false;
+            document.getElementById('adminPanel').style.display = 'none';
+            document.getElementById('editStatus').textContent = '';
+            renderTable();
+            alert('Modo administrativo desativado!');
+        }
+
+        function enableEditMode() {
+            if (!isAdmin) {
+                alert('Acesso negado! Faça login como administrador.');
+                return;
+            }
+            isEditMode = true;
+            document.getElementById('editStatus').textContent = 'MODO EDIÇÃO ATIVO - Você pode editar os campos';
+            document.getElementById('editStatus').style.color = '#155724';
+            renderTable();
+        }
+
+        function renderTable(data = inventoryData) {
+            const tableBody = document.getElementById('tableBody');
+            tableBody.innerHTML = '';
+            
+            data.forEach((item, index) => {
+                const row = document.createElement('tr');
+                if (isEditMode) {
+                    row.classList.add('edit-mode');
+                }
+                
+                let pavimentoClass = '';
+                if (item.pavimento === 'CC') pavimentoClass = 'cc-pavimento';
+                else if (item.pavimento === 'T') pavimentoClass = 't-pavimento';
+                else if (item.pavimento === 'P2') pavimentoClass = 'p2-pavimento';
+                
+                row.innerHTML = `
+                    <td><span class="category-badge">${item.categoria || 'Não especificado'}</span></td>
+                    <td>${item.modelo || 'Não especificado'}</td>
+                    <td>
+                        ${isEditMode ? 
+                            `<select class="editable-select" data-field="pavimento" data-index="${index}">
+                                <option value="">Selecione</option>
+                                <option value="T" ${item.pavimento === 'T' ? 'selected' : ''}>T</option>
+                                <option value="P2" ${item.pavimento === 'P2' ? 'selected' : ''}>P2</option>
+                                <option value="CC" ${item.pavimento === 'CC' ? 'selected' : ''}>CC</option>
+                                <option value="Não Especificado!" ${item.pavimento === 'Não Especificado!' ? 'selected' : ''}>Não Especificado!</option>
+                            </select>` :
+                            `<span class="${pavimentoClass}">${item.pavimento || '-'}</span>`
+                        }
+                    </td>
+                    <td>
+                        ${isEditMode ? 
+                            `<input type="text" class="editable-input" value="${item.localizacao}" data-field="localizacao" data-index="${index}">` :
+                            `<span class="printed-info">${item.localizacao || 'A DEFINIR'}</span>`
+                        }
+                    </td>
+                    <td>
+                        ${isEditMode ? 
+                            `<input type="text" class="editable-input" value="${item.notaFiscal}" placeholder="Nº Nota Fiscal" data-field="notaFiscal" data-index="${index}">` :
+                            `<span class="printed-info">${item.notaFiscal || '-'}</span>`
+                        }
+                    </td>
+                    <td>
+                        ${isEditMode ? 
+                            `<input type="text" class="editable-input" value="${item.observacoes}" placeholder="Observações" data-field="observacoes" data-index="${index}">` :
+                            `<span class="printed-info">${item.observacoes || '-'}</span>`
+                        }
+                    </td>
+                `;
+                tableBody.appendChild(row);
+            });
+
+            if (isEditMode) {
+                addEditListeners();
+            }
+            
+            updateStats(data);
+            populateFilters();
+        }
+
+        function addEditListeners() {
+            document.querySelectorAll('.editable-input').forEach(input => {
+                input.addEventListener('change', function() {
+                    const index = this.getAttribute('data-index');
+                    const field = this.getAttribute('data-field');
+                    inventoryData[index][field] = this.value;
+                });
+            });
+
+            document.querySelectorAll('.editable-select').forEach(select => {
+                select.addEventListener('change', function() {
+                    const index = this.getAttribute('data-index');
+                    const field = this.getAttribute('data-field');
+                    inventoryData[index][field] = this.value;
+                });
+            });
+        }
+
+        function saveAllData() {
+            if (!isAdmin) {
+                alert('Acesso negado!');
+                return;
+            }
+            localStorage.setItem('inventoryData', JSON.stringify(inventoryData));
+            alert('Todas as alterações foram salvas com sucesso!');
+        }
+
+        function loadSavedData() {
+            const saved = localStorage.getItem('inventoryData');
+            if (saved) {
+                const savedData = JSON.parse(saved);
+                savedData.forEach((item, index) => {
+                    if (inventoryData[index]) {
+                        inventoryData[index].localizacao = item.localizacao || '';
+                        inventoryData[index].notaFiscal = item.notaFiscal || '';
+                        inventoryData[index].observacoes = item.observacoes || '';
+                        inventoryData[index].pavimento = item.pavimento || '';
+                    }
+                });
+            }
+        }
+
+        function exportToExcel() {
+            if (!isAdmin) {
+                alert('Acesso negado!');
+                return;
+            }
+            
+            let csv = 'Categoria,Modelo,Pavimento,Localização,Nota Fiscal,Observações\n';
+            
+            inventoryData.forEach(item => {
+                csv += `"${item.categoria || ''}","${item.modelo || ''}","${item.pavimento || ''}","${item.localizacao || ''}","${item.notaFiscal || ''}","${item.observacoes || ''}"\n`;
+            });
+            
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            const url = URL.createObjectURL(blob);
+            link.setAttribute('href', url);
+            link.setAttribute('download', 'inventario_equipamentos.csv');
+            link.style.visibility = 'hidden';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        function updateStats(data) {
+            const stats = document.getElementById('stats');
+            const total = data.length;
+            
+            const categories = [...new Set(data.map(item => item.categoria))].filter(Boolean);
+            const categoryCounts = categories.map(cat => {
+                const count = data.filter(item => item.categoria === cat).length;
+                return `${cat}: ${count}`;
+            }).join(' | ');
+            
+            const locationsFilled = data.filter(item => item.localizacao && item.localizacao.trim() !== '').length;
+            const fillPercentage = ((locationsFilled / total) * 100).toFixed(1);
+            
+            stats.innerHTML = `
+                <strong>📈 Estatísticas do Inventário:</strong><br>
+                Total de Equipamentos: <strong>${total}</strong> | 
+                Localizações preenchidas: <strong>${locationsFilled}/${total} (${fillPercentage}%)</strong><br>
+                Categorias: <strong>${categories.length}</strong><br>
+                <strong>${categoryCounts}</strong>
+                ${isAdmin ? '<br><span style="color: #856404;">🔧 Modo Administrativo Ativo</span>' : ''}
+            `;
+        }
+
+        function populateFilters() {
+            const categoryFilter = document.getElementById('filterCategory');
+            const pavimentoFilter = document.getElementById('filterPavimento');
+            
+            while (categoryFilter.children.length > 1) categoryFilter.removeChild(categoryFilter.lastChild);
+            while (pavimentoFilter.children.length > 1) pavimentoFilter.removeChild(pavimentoFilter.lastChild);
+            
+            const categories = [...new Set(inventoryData.map(item => item.categoria))].filter(Boolean);
+            categories.forEach(cat => {
+                const option = document.createElement('option');
+                option.value = cat;
+                option.textContent = cat;
+                categoryFilter.appendChild(option);
+            });
+            
+            const pavimentos = [...new Set(inventoryData.map(item => item.pavimento))].filter(Boolean);
+            pavimentos.forEach(pav => {
+                const option = document.createElement('option');
+                option.value = pav;
+                option.textContent = pav;
+                pavimentoFilter.appendChild(option);
+            });
+        }
+
+        function filterTable() {
+            const categoryFilter = document.getElementById('filterCategory').value;
+            const pavimentoFilter = document.getElementById('filterPavimento').value;
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            
+            const filteredData = inventoryData.filter(item => {
+                const matchesCategory = !categoryFilter || item.categoria === categoryFilter;
+                const matchesPavimento = !pavimentoFilter || item.pavimento === pavimentoFilter;
+                const matchesSearch = !searchTerm || 
+                    (item.modelo && item.modelo.toLowerCase().includes(searchTerm)) ||
+                    (item.localizacao && item.localizacao.toLowerCase().includes(searchTerm)) ||
+                    (item.categoria && item.categoria.toLowerCase().includes(searchTerm)) ||
+                    (item.notaFiscal && item.notaFiscal.toLowerCase().includes(searchTerm)) ||
+                    (item.observacoes && item.observacoes.toLowerCase().includes(searchTerm));
+                
+                return matchesCategory && matchesPavimento && matchesSearch;
+            });
+            
+            renderTable(filteredData);
+        }
+
+        function clearFilters() {
+            document.getElementById('filterCategory').value = '';
+            document.getElementById('filterPavimento').value = '';
+            document.getElementById('searchInput').value = '';
+            renderTable();
+        }
+
+        window.onclick = function(event) {
+            const modal = document.getElementById('loginModal');
+            if (event.target === modal) {
+                closeModal();
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            loadSavedData();
+            renderTable();
+        });
+    </script>
+</body>
+</html>
