@@ -185,19 +185,6 @@
             background: #fff3cd;
         }
         
-        .login-form {
-            display: flex;
-            gap: 10px;
-            align-items: center;
-        }
-        
-        .login-input {
-            padding: 6px 10px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            font-size: 14px;
-        }
-        
         .modal {
             display: none;
             position: fixed;
@@ -376,13 +363,7 @@
     </div>
 
     <script>
-        // CREDENCIAIS DO ADMIN
-        const ADMIN_CREDENTIALS = {
-            user: "admin",
-            password: "admin123"
-        };
-        
-        // Dados do inventário COMPLETO
+        // Dados do inventário COMPLETO - 162 EQUIPAMENTOS!
         const inventoryData = [
             // ROTEADORES (21 equipamentos)
             { categoria: "Roteador", modelo: "Ubiquiti U6 Pro", pavimento: "T", localizacao: "Corredor Direito", notaFiscal: "", observacoes: "" },
@@ -560,21 +541,19 @@
 
         function closeModal() {
             document.getElementById('loginModal').style.display = 'none';
-            document.getElementById('adminUser').value = '';
-            document.getElementById('adminPassword').value = '';
         }
 
         function login() {
             const user = document.getElementById('adminUser').value;
             const password = document.getElementById('adminPassword').value;
             
-            if (user === ADMIN_CREDENTIALS.user && password === ADMIN_CREDENTIALS.password) {
+            if (user === "admin" && password === "admin123") {
                 isAdmin = true;
                 document.getElementById('adminPanel').style.display = 'block';
                 closeModal();
-                alert('Modo administrativo ativado!');
+                alert('✅ Modo administrativo ativado!');
             } else {
-                alert('Usuário ou senha incorretos!');
+                alert('❌ Usuário ou senha incorretos!');
             }
         }
 
@@ -682,8 +661,7 @@
                 return;
             }
             localStorage.setItem('inventoryData', JSON.stringify(inventoryData));
-            localStorage.setItem('lastDataUpdate', new Date().getTime());
-            alert('💾 Dados salvos! Todos os usuários verão as atualizações em instantes...');
+            alert('💾 Todas as alterações foram salvas!');
         }
 
         function loadSavedData() {
@@ -799,42 +777,10 @@
             renderTable();
         }
 
-        function checkForUpdates() {
-            const lastUpdate = localStorage.getItem('lastDataUpdate');
-            const currentTime = new Date().getTime();
-            
-            if (lastUpdate && (currentTime - lastUpdate) < 5000) {
-                console.log('📦 Dados atualizados! Recarregando...');
-                location.reload();
-            }
-        }
-
-        window.onclick = function(event) {
-            const modal = document.getElementById('loginModal');
-            if (event.target === modal) {
-                closeModal();
-            }
-        }
-
+        // INICIALIZAÇÃO
         document.addEventListener('DOMContentLoaded', function() {
             loadSavedData();
             renderTable();
-            
-            // Verifica atualizações a cada 5 segundos
-            setInterval(checkForUpdates, 5000);
-            
-            // Verifica se o arquivo HTML mudou a cada 10 segundos
-            setInterval(function() {
-                fetch(window.location.href + '?t=' + new Date().getTime())
-                    .then(response => response.text())
-                    .then(html => {
-                        if (html !== document.documentElement.outerHTML) {
-                            console.log('🔄 Site atualizado! Recarregando...');
-                            location.reload();
-                        }
-                    })
-                    .catch(error => console.log('⚠️ Erro ao verificar atualizações'));
-            }, 10000);
         });
     </script>
 </body>
