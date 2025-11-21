@@ -810,5 +810,24 @@
             renderTable();
         });
     </script>
+
+    <script>
+// CÓDIGO QUE ATUALIZA AUTOMATICAMENTE
+setInterval(function() {
+    fetch(window.location.href)
+        .then(response => response.text())
+        .then(html => {
+            let newContent = html.split('<body>')[1].split('</body>')[0];
+            let currentContent = document.body.innerHTML;
+            
+            if (newContent !== currentContent) {
+                console.log('Site atualizado! Recarregando...');
+                location.reload();
+            }
+        })
+        .catch(error => console.log('Erro ao verificar atualizações'));
+}, 30000); // Verifica a cada 30 segundos
+</script>
+    
 </body>
 </html>
