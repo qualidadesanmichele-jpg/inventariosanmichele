@@ -379,7 +379,8 @@
             <div class="admin-controls">
                 <button onclick="enableEditMode()" id="editBtn">✏️ Habilitar Edição</button>
                 <button onclick="saveAllData()" class="save-btn">💾 Salvar Local</button>
-                <button onclick="syncWithServer()" style="background: #17a2b8;">☁️ Sincronizar Servidor</button>
+                <button onclick="syncWithGoogleSheets()" style="background: #17a2b8;">☁️ Sincronizar Google Sheets</button>
+                <button onclick="loadFromGoogleSheets()" style="background: #6f42c1;">📥 Carregar do Google Sheets</button>
                 <button onclick="exportToExcel()" style="background: #28a745;">📊 Exportar Excel</button>
                 <button onclick="logout()" style="background: #dc3545;">🚪 Sair</button>
                 <span id="editStatus" style="color: #856404; font-weight: bold;"></span>
@@ -437,8 +438,8 @@
             password: "sanmichele2024"
         };
         
-        // Configurações do servidor (simulado)
-        const SERVER_URL = 'https://jsonplaceholder.typicode.com/posts'; // URL de exemplo
+        // URL DO SEU GOOGLE APPS SCRIPT
+        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyeh6h1ha8YCust_pk7Ks-QIrxISDeRg7gTyT1PuHk/dev';
         
         let inventoryData = [];
         let isEditMode = false;
@@ -446,7 +447,7 @@
         let autoSaveTimeout = null;
         let connectedUsers = 1;
 
-        // DADOS COMPLETOS DO INVENTÁRIO
+        // DADOS COMPLETOS DO INVENTÁRIO (152 equipamentos)
         const defaultData = [
             // ROTEADORES (21 equipamentos)
             { categoria: "Roteador", modelo: "Ubiquiti U6 Pro", pavimento: "T", localizacao: "Corredor Direito", notafiscal: "", observacoes: "" },
@@ -815,32 +816,93 @@
             }
         }
 
-        // SINCRONIZAÇÃO COM SERVIDOR (SIMULADO)
-        async function syncWithServer() {
+        // SINCRONIZAÇÃO COM GOOGLE SHEETS
+        async function syncWithGoogleSheets() {
             if (!isAdmin) {
                 showNotification('Acesso negado!', 'error');
                 return;
             }
             
             try {
-                showSyncStatus('Sincronizando com servidor...', 'sync-loading');
+                showSyncStatus('Enviando dados para Google Sheets...', 'sync-loading');
                 
-                // Simulação de sincronização com servidor
-                await new Promise(resolve => setTimeout(resolve, 1500));
+                const response = await fetch(GOOGLE_SCRIPT_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        action: 'saveData',
+                        inventoryData: inventoryData
+                    })
+                });
                 
-                // Em um cenário real, aqui estaria a chamada para a API
-                // const response = await fetch(SERVER_URL, { ... });
+                const result = await response.json();
                 
-                showSyncStatus('✓ Sincronizado com servidor', 'sync-success');
-                setTimeout(() => {
-                    document.getElementById('syncStatus').textContent = '';
-                }, 3000);
-                
-                showNotification('☁️ Dados sincronizados com sucesso!', 'success');
+                if (result.success) {
+                    showSyncStatus('✓ Dados enviados para Google Sheets', 'sync-success');
+                    setTimeout(() => {
+                        document.getElementById('syncStatus').textContent = '';
+                    }, 3000);
+                    showNotification('☁️ Dados sincronizados com Google Sheets!', 'success');
+                } else {
+                    throw new Error(result.error || 'Erro desconhecido');
+                }
             } catch (error) {
                 console.error('Erro na sincronização:', error);
                 showSyncStatus('✗ Erro na sincronização', 'sync-error');
-                showNotification('❌ Erro ao sincronizar com servidor', 'error');
+                showNotification('❌ Erro ao sincronizar com Google Sheets: ' + error.message, 'error');
+            }
+        }
+
+        async function loadFromGoogleSheets() {
+            if (!isAdmin) {
+                showNotification('Acesso negado!', 'error');
+                return;
+            }
+            
+            try {
+                showSyncStatus('Carregando dados do Google Sheets...', 'sync-loading');
+                
+                const response = await fetch(GOOGLE_SCRIPT_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        action: 'getData'
+                    })
+                });
+                
+                const result = await response.json();
+                
+                if (result.success && result.data && result.data.length > 0) {
+                    // Atualiza os dados locais com os do Google Sheets
+                    result.data.forEach((remoteItem, index) => {
+                        if (inventoryData[index]) {
+                            // Mantém apenas os dados que estão preenchidos no Google Sheets
+                            if (remoteItem.localizacao) inventoryData[index].localizacao = remoteItem.localizacao;
+                            if (remoteItem.pavimento) inventoryData[index].pavimento = remoteItem.pavimento;
+                            if (remoteItem.notafiscal) inventoryData[index].notafiscal = remoteItem.notafiscal;
+                            if (remoteItem.observacoes) inventoryData[index].observacoes = remoteItem.observacoes;
+                        }
+                    });
+                    
+                    // Salva localmente e renderiza
+                    localStorage.setItem('inventoryData', JSON.stringify(inventoryData));
+                    renderTable();
+                    showSyncStatus('✓ Dados carregados do Google Sheets', 'sync-success');
+                    setTimeout(() => {
+                        document.getElementById('syncStatus').textContent = '';
+                    }, 3000);
+                    showNotification('📥 Dados carregados do Google Sheets!', 'success');
+                } else {
+                    showNotification('ℹ️ Nenhum dado encontrado no Google Sheets', 'info');
+                }
+            } catch (error) {
+                console.error('Erro ao carregar do Google Sheets:', error);
+                showSyncStatus('✗ Erro ao carregar dados', 'sync-error');
+                showNotification('❌ Erro ao carregar do Google Sheets: ' + error.message, 'error');
             }
         }
 
