@@ -728,7 +728,7 @@
         };
         
         // URL DO SEU GOOGLE APPS SCRIPT - ATUALIZADA
-        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwdYrSfF7Zp_HgWL65DXb_9ws8cVLDjVqycVzPZuiB8QYLH3lgkoI88-Jj2XqNYzL6u/exec';
+        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyeh6h1ha8YCust_pk7Ks-QIrxISDeRg7gTyT1PuHk/dev';
         
         let inventoryData = [];
         let isEditMode = false;
@@ -1094,7 +1094,7 @@
             }
         }
 
-        // SINCRONIZAÇÃO COM GOOGLE SHEETS - CORRIGIDA
+        // SINCRONIZAÇÃO COM GOOGLE SHEETS
         async function syncWithGoogleSheets() {
             if (!isAdmin) {
                 showNotification('Acesso negado! Faça login como administrador.', 'error');
@@ -1104,7 +1104,6 @@
             try {
                 showSyncStatus('Enviando dados para Google Sheets...', 'sync-loading');
                 
-                // Formata os dados para o formato correto
                 const dataToSend = {
                     action: 'saveData',
                     inventoryData: inventoryData
@@ -1151,7 +1150,6 @@
             try {
                 showSyncStatus('Carregando dados do Google Sheets...', 'sync-loading');
                 
-                // Tenta carregar dados do Google Sheets
                 const response = await fetch(GOOGLE_SCRIPT_URL + '?action=getData', {
                     method: 'GET'
                 });
@@ -1160,7 +1158,6 @@
                     const result = await response.json();
                     
                     if (result.success && result.data) {
-                        // Atualiza os dados locais com os dados do Google Sheets
                         result.data.forEach((item, index) => {
                             if (inventoryData[index]) {
                                 inventoryData[index].localizacao = item.localizacao || '';
@@ -1170,10 +1167,7 @@
                             }
                         });
                         
-                        // Salva localmente
                         localStorage.setItem('inventoryData', JSON.stringify(inventoryData));
-                        
-                        // Atualiza a tabela
                         renderTable();
                         
                         showSyncStatus('✓ Dados carregados do Google Sheets', 'sync-success');
@@ -1391,7 +1385,6 @@
             renderTable();
             showNotification('Sistema de inventário carregado com sucesso!', 'success');
             
-            // Verifica se já está logado como admin
             const savedAdmin = localStorage.getItem('isAdmin');
             if (savedAdmin === 'true') {
                 isAdmin = true;
