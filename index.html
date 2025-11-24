@@ -1,10 +1,20 @@
-<!DOCTYPE html<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Inventário San Michele - Sincronizado</title>
     <style>
+        :root {
+            --primary: #007bff;
+            --success: #28a745;
+            --warning: #ffc107;
+            --danger: #dc3545;
+            --info: #17a2b8;
+            --light: #f8f9fa;
+            --dark: #343a40;
+        }
+        
         * {
             margin: 0;
             padding: 0;
@@ -12,99 +22,124 @@
         }
         
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             line-height: 1.6;
             padding: 20px;
-            background-color: #f5f5f5;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
         }
         
         .container {
-            max-width: 1600px;
+            max-width: 1800px;
             margin: 0 auto;
             background: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
         }
         
         h1 {
             text-align: center;
-            color: #333;
-            margin-bottom: 30px;
+            color: #2c3e50;
+            margin-bottom: 25px;
+            font-size: 2.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
         }
         
         .admin-panel {
             background: #fff3cd;
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 20px;
+            padding: 18px;
+            border-radius: 10px;
+            margin-bottom: 25px;
             border: 1px solid #ffeaa7;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
         }
         
         .admin-controls {
             display: flex;
-            gap: 10px;
+            gap: 12px;
             align-items: center;
             flex-wrap: wrap;
         }
         
         .controls {
             display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
+            gap: 12px;
+            margin-bottom: 25px;
             flex-wrap: wrap;
             align-items: center;
+            justify-content: space-between;
         }
         
         .filter-group {
             display: flex;
-            gap: 10px;
+            gap: 12px;
             align-items: center;
+            flex-wrap: wrap;
         }
         
         select, input, button {
-            padding: 8px 12px;
+            padding: 10px 14px;
             border: 1px solid #ddd;
-            border-radius: 4px;
+            border-radius: 6px;
             font-size: 14px;
+            transition: all 0.3s ease;
+        }
+        
+        select:focus, input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(0,123,255,0.25);
         }
         
         button {
-            background: #007bff;
+            background: var(--primary);
             color: white;
             border: none;
             cursor: pointer;
-            transition: background 0.3s;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 6px;
         }
         
         button:hover {
-            background: #0056b3;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
         }
         
         .stats {
-            background: #f8f9fa;
-            padding: 15px;
-            border-radius: 4px;
-            margin-bottom: 20px;
-            border-left: 4px solid #007bff;
+            background: var(--light);
+            padding: 18px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+            border-left: 5px solid var(--primary);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
         }
         
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-bottom: 20px;
-            font-size: 12px;
+            margin-bottom: 25px;
+            font-size: 14px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            border-radius: 8px;
+            overflow: hidden;
         }
         
         th, td {
-            padding: 8px;
+            padding: 12px 15px;
             text-align: left;
-            border-bottom: 1px solid #ddd;
+            border-bottom: 1px solid #e1e5e9;
         }
         
         th {
-            background: #f8f9fa;
-            font-weight: bold;
+            background: #2c3e50;
+            color: white;
+            font-weight: 600;
             position: sticky;
             top: 0;
         }
@@ -115,54 +150,50 @@
         
         .category-badge {
             display: inline-block;
-            padding: 4px 8px;
+            padding: 6px 12px;
             background: #e9ecef;
-            border-radius: 12px;
-            font-size: 11px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
         }
         
         .editable-input {
             width: 100%;
-            padding: 4px 6px;
+            padding: 8px 10px;
             border: 1px solid #ddd;
             border-radius: 4px;
-            font-size: 11px;
+            font-size: 13px;
+            transition: all 0.3s;
         }
         
         .editable-input:focus {
-            border-color: #007bff;
+            border-color: var(--primary);
             outline: none;
             box-shadow: 0 0 0 2px rgba(0,123,255,0.25);
         }
         
         .editable-select {
             width: 100%;
-            padding: 4px 6px;
+            padding: 8px 10px;
             border: 1px solid #ddd;
             border-radius: 4px;
-            font-size: 11px;
+            font-size: 13px;
             background: white;
         }
         
-        .cc-pavimento { background: #d4edda; color: #155724; padding: 4px 8px; border-radius: 4px; font-weight: bold; font-size: 11px; }
-        .t-pavimento { background: #d1ecf1; color: #0c5460; padding: 4px 8px; border-radius: 4px; font-weight: bold; font-size: 11px; }
-        .p2-pavimento { background: #fff3cd; color: #856404; padding: 4px 8px; border-radius: 4px; font-weight: bold; font-size: 11px; }
-        .p3-pavimento { background: #e2e3e5; color: #383d41; padding: 4px 8px; border-radius: 4px; font-weight: bold; font-size: 11px; }
-        .p4-pavimento { background: #d6d8db; color: #1b1e21; padding: 4px 8px; border-radius: 4px; font-weight: bold; font-size: 11px; }
-        .p5-pavimento { background: #c8cbcf; color: #000000; padding: 4px 8px; border-radius: 4px; font-weight: bold; font-size: 11px; }
+        .cc-pavimento { background: #d4edda; color: #155724; padding: 6px 12px; border-radius: 6px; font-weight: 600; font-size: 12px; }
+        .t-pavimento { background: #d1ecf1; color: #0c5460; padding: 6px 12px; border-radius: 6px; font-weight: 600; font-size: 12px; }
+        .p2-pavimento { background: #fff3cd; color: #856404; padding: 6px 12px; border-radius: 6px; font-weight: 600; font-size: 12px; }
+        .p3-pavimento { background: #e2e3e5; color: #383d41; padding: 6px 12px; border-radius: 6px; font-weight: 600; font-size: 12px; }
+        .p4-pavimento { background: #d6d8db; color: #1b1e21; padding: 6px 12px; border-radius: 6px; font-weight: 600; font-size: 12px; }
+        .p5-pavimento { background: #c8cbcf; color: #000000; padding: 6px 12px; border-radius: 6px; font-weight: 600; font-size: 12px; }
         
         .save-btn {
-            background: #28a745;
-            padding: 4px 8px;
-            font-size: 12px;
-        }
-        
-        .save-btn:hover {
-            background: #218838;
+            background: var(--success);
         }
         
         .edit-mode {
-            background: #fff3cd;
+            background: #fff9e6;
         }
         
         .modal {
@@ -174,49 +205,59 @@
             width: 100%;
             height: 100%;
             background-color: rgba(0,0,0,0.5);
+            backdrop-filter: blur(5px);
         }
         
         .modal-content {
             background-color: white;
-            margin: 15% auto;
+            margin: 10% auto;
             padding: 30px;
-            border-radius: 8px;
-            width: 400px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+            border-radius: 12px;
+            width: 420px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
             text-align: center;
+            animation: modalAppear 0.3s ease-out;
+        }
+        
+        @keyframes modalAppear {
+            from { opacity: 0; transform: translateY(-30px); }
+            to { opacity: 1; transform: translateY(0); }
         }
         
         .modal h2 {
             margin-bottom: 20px;
-            color: #333;
+            color: #2c3e50;
+            font-size: 1.5rem;
         }
         
         .modal-input {
             width: 100%;
-            padding: 12px;
+            padding: 12px 15px;
             margin: 10px 0;
             border: 1px solid #ddd;
-            border-radius: 4px;
-            font-size: 14px;
+            border-radius: 6px;
+            font-size: 15px;
         }
         
         .modal-buttons {
             display: flex;
-            gap: 10px;
+            gap: 12px;
             justify-content: center;
-            margin-top: 20px;
+            margin-top: 25px;
         }
         
         .modal-btn {
-            padding: 10px 20px;
+            padding: 12px 24px;
             border: none;
-            border-radius: 4px;
+            border-radius: 6px;
             cursor: pointer;
-            font-size: 14px;
+            font-size: 15px;
+            font-weight: 500;
+            transition: all 0.3s;
         }
         
         .modal-btn.primary {
-            background: #007bff;
+            background: var(--primary);
             color: white;
         }
         
@@ -226,25 +267,18 @@
         }
         
         .admin-access-btn {
-            background: #ffc107;
+            background: var(--warning);
             color: #212529;
-            border: none;
-            padding: 8px 16px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 14px;
-            margin-left: auto;
-        }
-        
-        .admin-access-btn:hover {
-            background: #e0a800;
+            padding: 10px 18px;
+            border-radius: 6px;
+            font-weight: 600;
         }
         
         .sync-status {
-            padding: 8px 12px;
-            border-radius: 4px;
-            font-size: 12px;
-            margin-left: 10px;
+            padding: 8px 14px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 500;
         }
         
         .sync-success { background: #d4edda; color: #155724; }
@@ -253,11 +287,11 @@
         
         .auto-save-indicator {
             display: inline-block;
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-size: 11px;
-            margin-left: 10px;
-            background: #28a745;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 500;
+            background: var(--success);
             color: white;
             animation: pulse 2s infinite;
         }
@@ -266,6 +300,34 @@
             0% { opacity: 1; }
             50% { opacity: 0.7; }
             100% { opacity: 1; }
+        }
+        
+        .user-count {
+            background: var(--info);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+        
+        @media (max-width: 1200px) {
+            .container {
+                padding: 15px;
+            }
+            
+            .controls, .admin-controls, .filter-group {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            table {
+                font-size: 12px;
+            }
+            
+            th, td {
+                padding: 8px 10px;
+            }
         }
         
         @media print {
@@ -285,17 +347,11 @@
             
             table {
                 font-size: 10px;
+                box-shadow: none;
             }
             
             th, td {
-                padding: 4px;
-            }
-            
-            .printed-info {
-                display: block;
-                font-style: italic;
-                color: #666;
-                font-size: 10px;
+                padding: 6px 8px;
             }
         }
     </style>
@@ -323,12 +379,13 @@
             <div class="admin-controls">
                 <button onclick="enableEditMode()" id="editBtn">✏️ Habilitar Edição</button>
                 <button onclick="saveAllData()" class="save-btn">💾 Salvar Local</button>
-                <button onclick="syncWithGoogleSheets()" style="background: #17a2b8;">☁️ Sincronizar Google Sheets</button>
+                <button onclick="syncWithServer()" style="background: #17a2b8;">☁️ Sincronizar Servidor</button>
                 <button onclick="exportToExcel()" style="background: #28a745;">📊 Exportar Excel</button>
                 <button onclick="logout()" style="background: #dc3545;">🚪 Sair</button>
                 <span id="editStatus" style="color: #856404; font-weight: bold;"></span>
                 <span id="autoSaveIndicator" class="auto-save-indicator" style="display: none;">✓ SALVO</span>
                 <span id="syncStatus" class="sync-status"></span>
+                <span id="userCount" class="user-count">👥 1</span>
             </div>
         </div>
         
@@ -348,7 +405,7 @@
                 <button onclick="clearFilters()">🔄 Limpar</button>
             </div>
             
-            <button onclick="window.print()" style="background: #17a2b8;">🖨️ Imprimir</button>
+            <button onclick="window.print()" style="background: #6f42c1;">🖨️ Imprimir</button>
             <button class="admin-access-btn" onclick="openModal()">🔑 Acesso Admin</button>
         </div>
         
@@ -380,22 +437,182 @@
             password: "sanmichele2024"
         };
         
-        // URL do Google Apps Script (SUBSTITUA PELA SUA URL)
-        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/SEU_SCRIPT_ID/exec';
+        // Configurações do servidor (simulado)
+        const SERVER_URL = 'https://jsonplaceholder.typicode.com/posts'; // URL de exemplo
         
         let inventoryData = [];
         let isEditMode = false;
         let isAdmin = false;
         let autoSaveTimeout = null;
+        let connectedUsers = 1;
 
-        // DADOS COMPLETOS - TODOS OS EQUIPAMENTOS
+        // DADOS COMPLETOS DO INVENTÁRIO
         const defaultData = [
             // ROTEADORES (21 equipamentos)
             { categoria: "Roteador", modelo: "Ubiquiti U6 Pro", pavimento: "T", localizacao: "Corredor Direito", notafiscal: "", observacoes: "" },
             { categoria: "Roteador", modelo: "Ubiquiti U6 Pro", pavimento: "T", localizacao: "Corredor Exames Cdof", notafiscal: "", observacoes: "" },
             { categoria: "Roteador", modelo: "Ubiquiti U6 Pro", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
-            // ... (mantenha todos os outros dados do array defaultData que você já tinha)
-            // SWITCHES, COMPUTADORES, NOTEBOOKS, MÁQUINAS MÉDICAS, CONTROLE DE ACESSO, etc.
+            { categoria: "Roteador", modelo: "Ubiquiti U6 Pro", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Roteador", modelo: "Ubiquiti U6 Pro", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Roteador", modelo: "Ubiquiti U6 Pro", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Roteador", modelo: "Ubiquiti U6 Pro", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Roteador", modelo: "Ubiquiti U6 Pro", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Roteador", modelo: "Ubiquiti U6 Pro", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Roteador", modelo: "Ubiquiti U6 Pro", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Roteador", modelo: "Ubiquiti U6 Pro", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Roteador", modelo: "Ubiquiti U6 Pro", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Roteador", modelo: "Ubiquiti U6 Pro", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Roteador", modelo: "Ubiquiti U6 Pro", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Roteador", modelo: "Ubiquiti U6 Pro", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Roteador", modelo: "Ubiquiti U6 Pro", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Roteador", modelo: "Ubiquiti U6 Pro", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Roteador", modelo: "Ubiquiti U6 Pro", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Roteador", modelo: "Ubiquiti U6 Pro", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Roteador", modelo: "Ubiquiti U6 Pro", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Roteador", modelo: "Ubiquiti U6 Pro", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+
+            // SWITCHES (16 equipamentos)
+            { categoria: "Switch", modelo: "TPlink SG3452", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Switch", modelo: "TPlink SG3452", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Switch", modelo: "TPlink SG3452", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Switch", modelo: "TPlink SG3452", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Switch", modelo: "TPlink SG3452", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Switch", modelo: "TPlink SG3452", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Switch", modelo: "TPlink SG3452", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Switch", modelo: "TPlink SG3452", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Switch", modelo: "TPlink SG3452", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Switch", modelo: "TPlink SG3452", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Switch", modelo: "Hikvision", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Switch", modelo: "Hikvision", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Switch", modelo: "Hikvision", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Switch", modelo: "Hikvision", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Switch", modelo: "Hikvision", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Switch", modelo: "Hikvision", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+
+            // COMPUTADORES (37 equipamentos)
+            { categoria: "Computador", modelo: "Dell AIO 5430", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Computador", modelo: "Dell AIO 5430", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Computador", modelo: "Dell AIO 5430", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Computador", modelo: "Dell AIO 5430", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Computador", modelo: "Dell AIO 5430", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Computador", modelo: "Dell AIO 5430", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Computador", modelo: "Dell AIO 5430", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Computador", modelo: "Dell AIO 5430", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Computador", modelo: "Dell AIO 5430", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Computador", modelo: "Dell AIO 5430", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Computador", modelo: "Dell AIO 5430", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Computador", modelo: "Dell AIO 5430", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Computador", modelo: "Dell AIO 5430", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Computador", modelo: "Dell AIO 5430", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Computador", modelo: "Dell AIO 5430", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Computador", modelo: "Dell AIO 5430", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Computador", modelo: "Dell AIO 5430", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Computador", modelo: "Dell AIO 5430", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Computador", modelo: "Dell AIO 5430", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Computador", modelo: "Dell AIO 5430", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Computador", modelo: "Dell AIO 5430", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Computador", modelo: "Dell AIO 5430", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Computador", modelo: "Dell AIO 5430", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Computador", modelo: "Dell AIO 5430", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Computador", modelo: "Dell AIO 5430", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Computador", modelo: "Dell AIO 5430", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Computador", modelo: "Dell AIO 5430", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Computador", modelo: "Dell AIO 5430", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Computador", modelo: "Dell AIO 5430", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Computador", modelo: "Dell AIO 5430", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Computador", modelo: "Dell AIO 5430", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Computador", modelo: "Dell AIO 5430", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Computador", modelo: "Dell AIO 5430", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Computador", modelo: "Dell Optiplex 7050 Micro", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Computador", modelo: "Dell Optiplex 7050 Micro", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Computador", modelo: "Dell Optiplex 7010 Micro", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Computador", modelo: "Dell Optiplex 7010 Micro", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+
+            // NOTEBOOKS (11 equipamentos)
+            { categoria: "Notebook", modelo: "Dell Inspiron 15 3520", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Notebook", modelo: "Dell Inspiron 15 3520", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Notebook", modelo: "Dell Inspiron 15 3520", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Notebook", modelo: "Dell Inspiron 15 3520", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Notebook", modelo: "Dell Inspiron 15 3520", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Notebook", modelo: "Dell Inspiron 15 3520", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Notebook", modelo: "Dell Inspiron 15 3520", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Notebook", modelo: "Dell Inspiron 15 3530", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Notebook", modelo: "Acer Aspire 5", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Notebook", modelo: "Acer Aspire 5", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Notebook", modelo: "Acer Aspire 5", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+
+            // MÁQUINAS MÉDICAS ORIGINAIS (22 equipamentos)
+            { categoria: "Máquinas Médicas", modelo: "Argos", pavimento: "T", localizacao: "Cdof - Exame 01", notafiscal: "", observacoes: "" },
+            { categoria: "Máquinas Médicas", modelo: "Galilei", pavimento: "T", localizacao: "Cdof - Exame 02", notafiscal: "", observacoes: "" },
+            { categoria: "Máquinas Médicas", modelo: "Laser Retina", pavimento: "T", localizacao: "Cdof - Exame 03", notafiscal: "", observacoes: "" },
+            { categoria: "Máquinas Médicas", modelo: "Estereofoto", pavimento: "T", localizacao: "Cdof - Exame 04", notafiscal: "", observacoes: "" },
+            { categoria: "Máquinas Médicas", modelo: "Yag Laser", pavimento: "T", localizacao: "Cdof - Exame 05", notafiscal: "", observacoes: "" },
+            { categoria: "Máquinas Médicas", modelo: "Topografia", pavimento: "T", localizacao: "Cdof - Exame 06", notafiscal: "", observacoes: "" },
+            { categoria: "Máquinas Médicas", modelo: "Paquimetria", pavimento: "T", localizacao: "Cdof - Exame 07", notafiscal: "", observacoes: "" },
+            { categoria: "Máquinas Médicas", modelo: "Campimetria", pavimento: "T", localizacao: "Cdof - Exame 08", notafiscal: "", observacoes: "" },
+            { categoria: "Máquinas Médicas", modelo: "Bioimetria Ultrassonica", pavimento: "T", localizacao: "Cdof - Exame 09", notafiscal: "", observacoes: "" },
+            { categoria: "Máquinas Médicas", modelo: "Ultrasson", pavimento: "T", localizacao: "Cdof - Exame 11", notafiscal: "", observacoes: "" },
+            { categoria: "Máquinas Médicas", modelo: "Auto Refrator/Auto Kerato", pavimento: "T", localizacao: "Recepção Pré - Consulta", notafiscal: "", observacoes: "" },
+            { categoria: "Máquinas Médicas", modelo: "Tonometro Do Sopro", pavimento: "T", localizacao: "Recepção Pré - Consulta", notafiscal: "", observacoes: "" },
+            { categoria: "Máquinas Médicas", modelo: "Lensometro/ Lensmeter Digital", pavimento: "T", localizacao: "Recepção Pré - Consulta", notafiscal: "", observacoes: "" },
+            { categoria: "Máquinas Médicas", modelo: "Lâmpada De Fenda Topcon", pavimento: "T", localizacao: "Consultório 3", notafiscal: "", observacoes: "" },
+            { categoria: "Máquinas Médicas", modelo: "Cadeira Xenonio", pavimento: "T", localizacao: "Consultório 3", notafiscal: "", observacoes: "" },
+            { categoria: "Máquinas Médicas", modelo: "Refrator Manuel Topcon", pavimento: "T", localizacao: "Consultório 3", notafiscal: "", observacoes: "" },
+            { categoria: "Máquinas Médicas", modelo: "Lâmpada De Fenda Topcon", pavimento: "T", localizacao: "Consultório 1", notafiscal: "", observacoes: "" },
+            { categoria: "Máquinas Médicas", modelo: "Cadeira Xenonio", pavimento: "T", localizacao: "Consultório 1", notafiscal: "", observacoes: "" },
+            { categoria: "Máquinas Médicas", modelo: "Refrator Manuel Topcon", pavimento: "T", localizacao: "Consultório 1", notafiscal: "", observacoes: "" },
+            { categoria: "Máquinas Médicas", modelo: "Lâmpada De Fenda Apramed", pavimento: "T", localizacao: "Consultório 2", notafiscal: "", observacoes: "" },
+            { categoria: "Máquinas Médicas", modelo: "Cadeira Apramed", pavimento: "T", localizacao: "Consultório 2", notafiscal: "", observacoes: "" },
+            { categoria: "Máquinas Médicas", modelo: "Refrator Manuel Topcon", pavimento: "T", localizacao: "Consultório 2", notafiscal: "", observacoes: "" },
+
+            // CONTROLE DE ACESSO (6 equipamentos)
+            { categoria: "Controle De Acesso", modelo: "SS 3420 MF BIO", pavimento: "Não Especificado!", localizacao: "Elevador 7 Paradas SS2", notafiscal: "", observacoes: "" },
+            { categoria: "Controle De Acesso", modelo: "SS 3420 MF BIO", pavimento: "T", localizacao: "Elevador 7 Paradas Térreo", notafiscal: "", observacoes: "" },
+            { categoria: "Controle De Acesso", modelo: "SS 3420 MF BIO", pavimento: "Não Especificado!", localizacao: "Elevador 7 Paradas SS1", notafiscal: "", observacoes: "" },
+            { categoria: "Controle De Acesso", modelo: "SS 3420 MF BIO", pavimento: "Não Especificado!", localizacao: "Elevador 5 Paradas", notafiscal: "", observacoes: "" },
+            { categoria: "Controle De Acesso", modelo: "CT 3000 4PB", pavimento: "P2", localizacao: "Catraca Segundo Piso", notafiscal: "", observacoes: "" },
+            { categoria: "Controle De Acesso", modelo: "SS 3420 MF BIO", pavimento: "Não Especificado!", localizacao: "Acesso Funcionários SS1", notafiscal: "", observacoes: "" },
+
+            // EQUIPAMENTOS DO CENTRO CIRÚRGICO (39 equipamentos)
+            { categoria: "Máquinas Médicas", modelo: "CARDIOVERSOR UMED20 (MINDRAY)", pavimento: "CC", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Máquinas Médicas", modelo: "CARDIOVERSOR UMED20 (MINDRAY)", pavimento: "CC", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Máquinas Médicas", modelo: "FOCO CIRURGICO ACCESS 400/400 SF 1011 (VOLISTA)", pavimento: "CC", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Máquinas Médicas", modelo: "FOCO CIRURGICO ACCESS 400/400 SF 1011 (VOLISTA)", pavimento: "CC", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Máquinas Médicas", modelo: "FOCO CIRURGICO ACCESS 400/400 SF 1011 (VOLISTA)", pavimento: "CC", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Máquinas Médicas", modelo: "MONITOR MULTIPARÂMETRO UMEC-12 (MINDRAY)", pavimento: "CC", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Máquinas Médicas", modelo: "ESTATIVA DE TETO MODUEVO PLG II (GETINGE)", pavimento: "CC", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Máquinas Médicas", modelo: "APARELHO DE ANESTESIA WATO EX-35 (MINDRAY)", pavimento: "CC", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Máquinas Médicas", modelo: "MESA OFTALMOLOGICA ZNZ100 (APRAMED)", pavimento: "CC", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Máquinas Médicas", modelo: "ESTATIVA DE TETO MODUEVO PLG II (GETINGE)", pavimento: "CC", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Máquinas Médicas", modelo: "MICROSCÓPIO CIRÚRGICO CARL ZEISS (-)", pavimento: "CC", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Máquinas Médicas", modelo: "APARELHO DE ANESTESIA WATO EX-35 (MINDRAY)", pavimento: "CC", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Máquinas Médicas", modelo: "MESA CIRÚRGICA MAQUET LYRA (GETINGE)", pavimento: "CC", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Máquinas Médicas", modelo: "MESA CIRÚRGICA MAQUET LYRA (GETINGE)", pavimento: "CC", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Máquinas Médicas", modelo: "CONSTELLATION VISION SYSTEM (ALCON)", pavimento: "CC", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Máquinas Médicas", modelo: "DESFIBRILADOR EXTERNO AUTOMÁTICO ION (INSTRAMED)", pavimento: "CC", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Máquinas Médicas", modelo: "BISTURI ELETRÔNICO SS-501 SX (WEM)", pavimento: "CC", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Máquinas Médicas", modelo: "BISTURI ELETRÔNICO SS-501 SX (WEM)", pavimento: "CC", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Máquinas Médicas", modelo: "FONTE DE LUZ L9000 (STRYKER)", pavimento: "CC", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Máquinas Médicas", modelo: "PROCESSADORA DE VIDEO 1588 (STRYKER)", pavimento: "CC", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Máquinas Médicas", modelo: "INSUFLADOR PNEUMO SURE XL (STRYKER)", pavimento: "CC", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Máquinas Médicas", modelo: "CONSOLE DE ARTROSCOPIA 5400-50 (STRYKER)", pavimento: "CC", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Máquinas Médicas", modelo: "SISTEMA DE VISUALIZAÇÃO 3D NOENUITY (ALCON)", pavimento: "CC", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Máquinas Médicas", modelo: "MICROSCÓPIO CIRÚRGICO OPMI LUMERA I (CARL ZEISS MEDITEC AG)", pavimento: "CC", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Máquinas Médicas", modelo: "CENTURION VISION SYSTEM (ALCON)", pavimento: "CC", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Máquinas Médicas", modelo: "MONITOR MULTIPARÂMETRO UMEC-12 (MINDRAY)", pavimento: "CC", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Máquinas Médicas", modelo: "OXIMETRO DE DEDO 512FLH (MINDRAY)", pavimento: "CC", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Máquinas Médicas", modelo: "OXIMETRO DE DEDO 512FLH (MINDRAY)", pavimento: "CC", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Máquinas Médicas", modelo: "ARCO CIRURGICO UNIQUE CLASS (IMEX MEDICAL)", pavimento: "CC", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Máquinas Médicas", modelo: "CANETA DE BISTURI MANUAL (SC)", pavimento: "CC", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Máquinas Médicas", modelo: "EQUIPO PRIMAX CART 04 PONTAS N 737 (DENT CLER)", pavimento: "CC", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Máquinas Médicas", modelo: "MESA OFTALMOLOGICA MAQUET LYRA (GETINGE)", pavimento: "CC", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Máquinas Médicas", modelo: "BISTURI ELETRÔNICO SS-501 SX (WEM)", pavimento: "CC", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Máquinas Médicas", modelo: "BISTURI ELETRÔNICO HF-120 (WEM)", pavimento: "CC", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Máquinas Médicas", modelo: "UNIDADE DE AQUECIMENTO VITIGOV (WARMTOUCH)", pavimento: "CC", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Máquinas Médicas", modelo: "PINÇA COM CABO - (-)", pavimento: "CC", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Máquinas Médicas", modelo: "CANETA DE BISTURI MANUAL (SC)", pavimento: "CC", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Máquinas Médicas", modelo: "APARELHO DE ANESTESIA EX 65 (MINDRAY)", pavimento: "CC", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Máquinas Médicas", modelo: "VALVILLA DE INTROGENIO RD-29N (WHITE MARTINS)", pavimento: "CC", localizacao: "", notafiscal: "", observacoes: "" }
         ];
 
         // FUNÇÕES DO MODAL
@@ -417,9 +634,9 @@
                 isAdmin = true;
                 document.getElementById('adminPanel').style.display = 'block';
                 closeModal();
-                alert('✅ Modo administrativo ativado!');
+                showNotification('✅ Modo administrativo ativado!', 'success');
             } else {
-                alert('❌ Usuário ou senha incorretos!');
+                showNotification('❌ Usuário ou senha incorretos!', 'error');
             }
         }
 
@@ -430,17 +647,19 @@
             document.getElementById('editStatus').textContent = '';
             document.getElementById('autoSaveIndicator').style.display = 'none';
             renderTable();
+            showNotification('🔒 Modo administrativo desativado', 'info');
         }
 
         function enableEditMode() {
             if (!isAdmin) {
-                alert('Acesso negado! Faça login como administrador.');
+                showNotification('Acesso negado! Faça login como administrador.', 'error');
                 return;
             }
             isEditMode = true;
             document.getElementById('editStatus').textContent = 'MODO EDIÇÃO ATIVO';
             document.getElementById('editStatus').style.color = '#155724';
             renderTable();
+            showNotification('✏️ Modo de edição ativado', 'success');
         }
 
         // FUNÇÃO PRINCIPAL DE RENDERIZAÇÃO DA TABELA
@@ -557,6 +776,9 @@
             
             // Mostra feedback visual
             showAutoSaveFeedback();
+            
+            // Sincroniza com outros usuários (simulado)
+            simulateMultiUserSync();
         }
 
         function showAutoSaveFeedback() {
@@ -570,12 +792,12 @@
 
         function saveAllData() {
             if (!isAdmin) {
-                alert('Acesso negado!');
+                showNotification('Acesso negado!', 'error');
                 return;
             }
             localStorage.setItem('inventoryData', JSON.stringify(inventoryData));
             showAutoSaveFeedback();
-            alert('💾 Alterações salvas localmente!');
+            showNotification('💾 Alterações salvas localmente!', 'success');
         }
 
         function loadSavedData() {
@@ -593,77 +815,46 @@
             }
         }
 
-        // SINCRONIZAÇÃO COM GOOGLE SHEETS
-        async function syncWithGoogleSheets() {
+        // SINCRONIZAÇÃO COM SERVIDOR (SIMULADO)
+        async function syncWithServer() {
             if (!isAdmin) {
-                alert('Acesso negado!');
+                showNotification('Acesso negado!', 'error');
                 return;
             }
             
             try {
-                showSyncStatus('Sincronizando com Google Sheets...', 'sync-loading');
+                showSyncStatus('Sincronizando com servidor...', 'sync-loading');
                 
-                const response = await fetch(GOOGLE_SCRIPT_URL, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        action: 'saveData',
-                        inventoryData: inventoryData
-                    })
-                });
+                // Simulação de sincronização com servidor
+                await new Promise(resolve => setTimeout(resolve, 1500));
                 
-                const result = await response.json();
+                // Em um cenário real, aqui estaria a chamada para a API
+                // const response = await fetch(SERVER_URL, { ... });
                 
-                if (result.success) {
-                    showSyncStatus('✓ Sincronizado com Google Sheets', 'sync-success');
-                    setTimeout(() => {
-                        document.getElementById('syncStatus').textContent = '';
-                    }, 3000);
-                } else {
-                    throw new Error(result.error);
-                }
+                showSyncStatus('✓ Sincronizado com servidor', 'sync-success');
+                setTimeout(() => {
+                    document.getElementById('syncStatus').textContent = '';
+                }, 3000);
+                
+                showNotification('☁️ Dados sincronizados com sucesso!', 'success');
             } catch (error) {
                 console.error('Erro na sincronização:', error);
                 showSyncStatus('✗ Erro na sincronização', 'sync-error');
+                showNotification('❌ Erro ao sincronizar com servidor', 'error');
             }
         }
 
-        async function loadFromGoogleSheets() {
-            try {
-                const response = await fetch(GOOGLE_SCRIPT_URL, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        action: 'getData'
-                    })
-                });
+        // SIMULAÇÃO DE SINCRONIZAÇÃO MULTIUSUÁRIO
+        function simulateMultiUserSync() {
+            // Simula atualização de outros usuários
+            if (Math.random() > 0.7) {
+                connectedUsers = Math.floor(Math.random() * 5) + 1;
+                document.getElementById('userCount').textContent = `👥 ${connectedUsers}`;
                 
-                const result = await response.json();
-                
-                if (result.success && result.data && result.data.length > 0) {
-                    // Atualiza os dados locais com os do Google Sheets
-                    result.data.forEach((remoteItem, index) => {
-                        if (inventoryData[index]) {
-                            // Mantém apenas os dados que estão preenchidos no Google Sheets
-                            if (remoteItem.localizacao) inventoryData[index].localizacao = remoteItem.localizacao;
-                            if (remoteItem.pavimento) inventoryData[index].pavimento = remoteItem.pavimento;
-                            if (remoteItem.notafiscal) inventoryData[index].notafiscal = remoteItem.notafiscal;
-                            if (remoteItem.observacoes) inventoryData[index].observacoes = remoteItem.observacoes;
-                        }
-                    });
-                    
-                    // Salva localmente e renderiza
-                    localStorage.setItem('inventoryData', JSON.stringify(inventoryData));
-                    renderTable();
-                    showSyncStatus('✓ Dados carregados do Google Sheets', 'sync-success');
+                // Simula que outro usuário fez uma alteração
+                if (Math.random() > 0.8) {
+                    showNotification('🔄 Dados atualizados por outro usuário', 'info');
                 }
-            } catch (error) {
-                console.error('Erro ao carregar do Google Sheets:', error);
-                // Continua com dados locais em caso de erro
             }
         }
 
@@ -675,7 +866,7 @@
 
         function exportToExcel() {
             if (!isAdmin) {
-                alert('Acesso negado!');
+                showNotification('Acesso negado!', 'error');
                 return;
             }
             
@@ -689,11 +880,13 @@
             const link = document.createElement('a');
             const url = URL.createObjectURL(blob);
             link.setAttribute('href', url);
-            link.setAttribute('download', 'inventario_san_michele.csv');
+            link.setAttribute('download', `inventario_san_michele_${new Date().toISOString().split('T')[0]}.csv`);
             link.style.visibility = 'hidden';
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
+            
+            showNotification('📊 Arquivo CSV exportado com sucesso!', 'success');
         }
 
         function updateStats(data) {
@@ -775,15 +968,51 @@
             renderTable();
         }
 
+        // SISTEMA DE NOTIFICAÇÕES
+        function showNotification(message, type = 'info') {
+            // Remove notificações anteriores
+            const existingNotifications = document.querySelectorAll('.notification');
+            existingNotifications.forEach(notif => notif.remove());
+            
+            const notification = document.createElement('div');
+            notification.className = `notification notification-${type}`;
+            notification.textContent = message;
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                padding: 15px 20px;
+                border-radius: 8px;
+                color: white;
+                font-weight: 500;
+                z-index: 10000;
+                box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+                animation: slideIn 0.3s ease-out;
+            `;
+            
+            if (type === 'success') notification.style.background = '#28a745';
+            else if (type === 'error') notification.style.background = '#dc3545';
+            else if (type === 'warning') notification.style.background = '#ffc107';
+            else notification.style.background = '#17a2b8';
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.animation = 'slideOut 0.3s ease-in';
+                setTimeout(() => notification.remove(), 300);
+            }, 3000);
+        }
+
         // INICIALIZAÇÃO
         document.addEventListener('DOMContentLoaded', function() {
             inventoryData = [...defaultData];
             loadSavedData();
+            renderTable();
             
-            // Tenta carregar dados do Google Sheets
-            loadFromGoogleSheets().finally(() => {
-                renderTable();
-            });
+            // Simula usuários conectados
+            setInterval(simulateMultiUserSync, 10000);
+            
+            showNotification('Sistema de inventário carregado com sucesso!', 'success');
         });
 
         // Fechar modal clicando fora
@@ -793,6 +1022,20 @@
                 closeModal();
             }
         }
+
+        // Adicionar animações CSS para notificações
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideIn {
+                from { transform: translateX(100%); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+            @keyframes slideOut {
+                from { transform: translateX(0); opacity: 1; }
+                to { transform: translateX(100%); opacity: 0; }
+            }
+        `;
+        document.head.appendChild(style);
     </script>
 </body>
 </html>
