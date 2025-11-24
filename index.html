@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Inventário Completo de Equipamentos</title>
+    <title>Inventário San Michele - Sincronizado</title>
     <style>
         * {
             margin: 0;
@@ -144,7 +144,6 @@
             background: white;
         }
         
-        /* ESTILOS PARA OS PAVIMENTOS */
         .cc-pavimento { background: #d4edda; color: #155724; padding: 4px 8px; border-radius: 4px; font-weight: bold; font-size: 11px; }
         .t-pavimento { background: #d1ecf1; color: #0c5460; padding: 4px 8px; border-radius: 4px; font-weight: bold; font-size: 11px; }
         .p2-pavimento { background: #fff3cd; color: #856404; padding: 4px 8px; border-radius: 4px; font-weight: bold; font-size: 11px; }
@@ -299,15 +298,15 @@
     </div>
 
     <div class="container">
-        <h1>📊 Inventário Completo - Sincronizado</h1>
+        <h1>🏥 Inventário San Michele - Sincronizado</h1>
         
         <!-- Painel de Administração -->
         <div class="admin-panel" id="adminPanel" style="display: none;">
             <h3>🔧 Modo Administrativo</h3>
             <div class="admin-controls">
                 <button onclick="enableEditMode()" id="editBtn">✏️ Habilitar Edição</button>
-                <button onclick="saveToGoogleSheets()" class="save-btn">💾 Salvar na Nuvem</button>
-                <button onclick="loadFromGoogleSheets()" style="background: #17a2b8;">🔄 Carregar da Nuvem</button>
+                <button onclick="saveToCloud()" class="save-btn">💾 Salvar para Todos</button>
+                <button onclick="loadFromCloud()" style="background: #17a2b8;">🔄 Carregar Dados</button>
                 <button onclick="exportToExcel()" style="background: #28a745;">📊 Exportar Excel</button>
                 <button onclick="logout()" style="background: #dc3545;">🚪 Sair</button>
                 <span id="editStatus" style="color: #856404; font-weight: bold;"></span>
@@ -357,31 +356,140 @@
     </div>
 
     <script>
-        // CONFIGURAÇÃO DO GOOGLE SHEETS - VOCÊ VAI PRECISAR CRIAR UMA PLANILHA
-        const GOOGLE_SHEETS_CONFIG = {
-            // URL pública da sua planilha Google Sheets
-            sheetUrl: 'https://docs.google.com/spreadsheets/d/1YOUR_SHEET_ID_HERE/edit?usp=sharing'
-        };
-
+        // CONFIGURAÇÃO - SUA URL DO GOOGLE APPS SCRIPT
+        const API_URL = 'https://script.google.com/macros/s/AKfycbzzeDQxJwWUt8GegTkr8PYj1yQNyL2GL4R7hMuQnmpOeVM-n2-dM5DvbWl8cuADOsCQ/exec';
+        
         // CREDENCIAIS DO ADMIN
         const ADMIN_CREDENTIALS = {
             user: "admin",
-            password: "admin123"
+            password: "sanmichele2024"
         };
         
         let inventoryData = [];
         let isEditMode = false;
         let isAdmin = false;
 
-        // DADOS INICIAIS (serão substituídos pelos dados da nuvem)
+        // DADOS INICIAIS (162 equipamentos - versão resumida)
         const defaultData = [
             // ROTEADORES (21 equipamentos)
-            { categoria: "Roteador", modelo: "Ubiquiti U6 Pro", pavimento: "T", localizacao: "Corredor Direito", notaFiscal: "", observacoes: "" },
-            { categoria: "Roteador", modelo: "Ubiquiti U6 Pro", pavimento: "T", localizacao: "Corredor Exames Cdof", notaFiscal: "", observacoes: "" },
-            // ... (todos os outros 160 equipamentos do código anterior)
+            { categoria: "Roteador", modelo: "Ubiquiti U6 Pro", pavimento: "T", localizacao: "Corredor Direito", notafiscal: "", observacoes: "" },
+            { categoria: "Roteador", modelo: "Ubiquiti U6 Pro", pavimento: "T", localizacao: "Corredor Exames Cdof", notafiscal: "", observacoes: "" },
+            { categoria: "Roteador", modelo: "Ubiquiti U6 Pro", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Roteador", modelo: "Ubiquiti U6 Pro", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Roteador", modelo: "Ubiquiti U6 Pro", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Roteador", modelo: "Ubiquiti U6 Pro", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Roteador", modelo: "Ubiquiti U6 Pro", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Roteador", modelo: "Ubiquiti U6 Pro", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Roteador", modelo: "Ubiquiti U6 Pro", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Roteador", modelo: "Ubiquiti U6 Pro", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Roteador", modelo: "Ubiquiti U6 Pro", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Roteador", modelo: "Ubiquiti U6 Pro", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Roteador", modelo: "Ubiquiti U6 Pro", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Roteador", modelo: "Ubiquiti U6 Pro", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Roteador", modelo: "Ubiquiti U6 Pro", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Roteador", modelo: "Ubiquiti U6 Pro", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Roteador", modelo: "Ubiquiti U6 Pro", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Roteador", modelo: "Ubiquiti U6 Pro", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Roteador", modelo: "Ubiquiti U6 Pro", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Roteador", modelo: "Ubiquiti U6 Pro", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Roteador", modelo: "Ubiquiti U6 Pro", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+
+            // SWITCHES (16 equipamentos)
+            { categoria: "Switch", modelo: "TPlink SG3452", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Switch", modelo: "TPlink SG3452", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Switch", modelo: "TPlink SG3452", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Switch", modelo: "TPlink SG3452", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Switch", modelo: "TPlink SG3452", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Switch", modelo: "TPlink SG3452", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Switch", modelo: "TPlink SG3452", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Switch", modelo: "TPlink SG3452", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Switch", modelo: "TPlink SG3452", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Switch", modelo: "TPlink SG3452", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Switch", modelo: "Hikvision", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Switch", modelo: "Hikvision", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Switch", modelo: "Hikvision", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Switch", modelo: "Hikvision", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Switch", modelo: "Hikvision", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Switch", modelo: "Hikvision", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+
+            // COMPUTADORES (47 equipamentos - versão resumida)
+            { categoria: "Computador", modelo: "Dell AIO 5430", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Computador", modelo: "Dell AIO 5430", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Computador", modelo: "Dell AIO 5430", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+            // ... (continue com todos os 162 equipamentos do seu código original)
             
-            // ADICIONE AQUI TODOS OS 162 EQUIPAMENTOS DO CÓDIGO ANTERIOR
+            // ADICIONE AQUI TODOS OS 162 EQUIPAMENTOS DO SEU CÓDIGO ORIGINAL
         ];
+
+        // FUNÇÕES DE SINCRONIZAÇÃO COM BACKEND REAL
+        async function loadFromCloud() {
+            showSyncStatus('📡 Conectando...', 'loading');
+            
+            try {
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        action: 'getData'
+                    })
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    inventoryData = result.data;
+                    showSyncStatus('✅ Dados carregados!', 'success');
+                    renderTable();
+                } else {
+                    throw new Error(result.error || 'Erro ao carregar dados');
+                }
+                
+            } catch (error) {
+                console.error('Erro:', error);
+                showSyncStatus('⚠️ Usando dados locais', 'error');
+                // Usa dados locais como fallback
+                inventoryData = [...defaultData];
+                renderTable();
+            }
+        }
+
+        async function saveToCloud() {
+            if (!isAdmin) {
+                alert('❌ Acesso negado!');
+                return;
+            }
+            
+            showSyncStatus('💾 Salvando para todos...', 'loading');
+            
+            try {
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        action: 'saveData',
+                        inventoryData: inventoryData
+                    })
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    showSyncStatus('✅ Salvo para todos!', 'success');
+                    alert('🎉 Dados salvos com sucesso! Todos os usuários verão as atualizações.');
+                } else {
+                    throw new Error(result.error || 'Erro ao salvar dados');
+                }
+                
+            } catch (error) {
+                console.error('Erro:', error);
+                showSyncStatus('❌ Erro ao salvar', 'error');
+                alert('Erro ao salvar: ' + error.message);
+            }
+        }
 
         function showSyncStatus(message, type) {
             const statusElement = document.getElementById('syncStatus');
@@ -389,61 +497,6 @@
             statusElement.className = 'sync-status';
             if (type) {
                 statusElement.classList.add(`sync-${type}`);
-            }
-        }
-
-        // FUNÇÕES DE SINCRONIZAÇÃO SIMULADA (substitua por Google Sheets real)
-        async function saveToGoogleSheets() {
-            if (!isAdmin) {
-                alert('Acesso negado!');
-                return;
-            }
-            
-            showSyncStatus('Salvando na nuvem...', 'loading');
-            
-            try {
-                // Simula salvamento (substitua por API do Google Sheets)
-                localStorage.setItem('inventoryDataShared', JSON.stringify(inventoryData));
-                
-                // Aqui você integraria com a API real do Google Sheets
-                // await saveToRealGoogleSheets(inventoryData);
-                
-                setTimeout(() => {
-                    showSyncStatus('✅ Salvo na nuvem!', 'success');
-                    alert('Dados salvos na nuvem! Todos os usuários verão as atualizações.');
-                }, 1000);
-                
-            } catch (error) {
-                showSyncStatus('❌ Erro ao salvar', 'error');
-                alert('Erro ao salvar na nuvem: ' + error.message);
-            }
-        }
-
-        async function loadFromGoogleSheets() {
-            showSyncStatus('Carregando da nuvem...', 'loading');
-            
-            try {
-                // Simula carregamento (substitua por API do Google Sheets)
-                const savedData = localStorage.getItem('inventoryDataShared');
-                
-                if (savedData) {
-                    inventoryData = JSON.parse(savedData);
-                    showSyncStatus('✅ Dados carregados!', 'success');
-                } else {
-                    // Se não há dados salvos, usa os dados padrão
-                    inventoryData = [...defaultData];
-                    showSyncStatus('📋 Usando dados padrão', 'success');
-                }
-                
-                // Aqui você integraria com a API real do Google Sheets
-                // inventoryData = await loadFromRealGoogleSheets();
-                
-                renderTable();
-                
-            } catch (error) {
-                showSyncStatus('❌ Erro ao carregar', 'error');
-                inventoryData = [...defaultData];
-                renderTable();
             }
         }
 
@@ -466,7 +519,8 @@
                 isAdmin = true;
                 document.getElementById('adminPanel').style.display = 'block';
                 closeModal();
-                loadFromGoogleSheets(); // Carrega dados da nuvem ao fazer login
+                loadFromCloud();
+                alert('✅ Modo administrativo ativado!');
             } else {
                 alert('❌ Usuário ou senha incorretos!');
             }
@@ -487,7 +541,7 @@
                 return;
             }
             isEditMode = true;
-            document.getElementById('editStatus').textContent = 'MODO EDIÇÃO ATIVO - Você pode editar os campos';
+            document.getElementById('editStatus').textContent = 'MODO EDIÇÃO ATIVO';
             document.getElementById('editStatus').style.color = '#155724';
             renderTable();
         }
@@ -502,7 +556,6 @@
                     row.classList.add('edit-mode');
                 }
                 
-                // Determinar classe do pavimento
                 let pavimentoClass = '';
                 if (item.pavimento === 'CC') pavimentoClass = 'cc-pavimento';
                 else if (item.pavimento === 'T') pavimentoClass = 't-pavimento';
@@ -537,8 +590,8 @@
                     </td>
                     <td>
                         ${isEditMode ? 
-                            `<input type="text" class="editable-input" value="${item.notaFiscal}" placeholder="Nº Nota Fiscal" data-field="notaFiscal" data-index="${index}">` :
-                            `<span class="printed-info">${item.notaFiscal || '-'}</span>`
+                            `<input type="text" class="editable-input" value="${item.notafiscal}" placeholder="Nº Nota Fiscal" data-field="notafiscal" data-index="${index}">` :
+                            `<span class="printed-info">${item.notafiscal || '-'}</span>`
                         }
                     </td>
                     <td>
@@ -586,14 +639,14 @@
             let csv = 'Categoria,Modelo,Pavimento,Localização,Nota Fiscal,Observações\n';
             
             inventoryData.forEach(item => {
-                csv += `"${item.categoria || ''}","${item.modelo || ''}","${item.pavimento || ''}","${item.localizacao || ''}","${item.notaFiscal || ''}","${item.observacoes || ''}"\n`;
+                csv += `"${item.categoria || ''}","${item.modelo || ''}","${item.pavimento || ''}","${item.localizacao || ''}","${item.notafiscal || ''}","${item.observacoes || ''}"\n`;
             });
             
             const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
             const link = document.createElement('a');
             const url = URL.createObjectURL(blob);
             link.setAttribute('href', url);
-            link.setAttribute('download', 'inventario_equipamentos.csv');
+            link.setAttribute('download', 'inventario_san_michele.csv');
             link.style.visibility = 'hidden';
             document.body.appendChild(link);
             link.click();
@@ -659,7 +712,7 @@
                     (item.modelo && item.modelo.toLowerCase().includes(searchTerm)) ||
                     (item.localizacao && item.localizacao.toLowerCase().includes(searchTerm)) ||
                     (item.categoria && item.categoria.toLowerCase().includes(searchTerm)) ||
-                    (item.notaFiscal && item.notaFiscal.toLowerCase().includes(searchTerm)) ||
+                    (item.notafiscal && item.notafiscal.toLowerCase().includes(searchTerm)) ||
                     (item.observacoes && item.observacoes.toLowerCase().includes(searchTerm));
                 
                 return matchesCategory && matchesPavimento && matchesSearch;
@@ -677,7 +730,7 @@
 
         // INICIALIZAÇÃO
         document.addEventListener('DOMContentLoaded', function() {
-            loadFromGoogleSheets(); // Carrega dados da nuvem ao iniciar
+            loadFromCloud(); // Carrega dados da nuvem ao iniciar
         });
 
         // Fechar modal clicando fora
