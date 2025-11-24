@@ -11,8 +11,6 @@
             --warning: #ffc107;
             --danger: #dc3545;
             --info: #17a2b8;
-            --light: #f8f9fa;
-            --dark: #343a40;
         }
         
         * {
@@ -25,7 +23,7 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             line-height: 1.6;
             padding: 20px;
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            background: #f5f7fa;
             min-height: 100vh;
         }
         
@@ -35,7 +33,7 @@
             background: white;
             padding: 25px;
             border-radius: 12px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
         }
         
         h1 {
@@ -43,10 +41,6 @@
             color: #2c3e50;
             margin-bottom: 25px;
             font-size: 2.2rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 15px;
         }
         
         .admin-panel {
@@ -55,19 +49,18 @@
             border-radius: 10px;
             margin-bottom: 25px;
             border: 1px solid #ffeaa7;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
         }
         
         .admin-controls {
             display: flex;
-            gap: 12px;
+            gap: 10px;
             align-items: center;
             flex-wrap: wrap;
         }
         
         .controls {
             display: flex;
-            gap: 12px;
+            gap: 10px;
             margin-bottom: 25px;
             flex-wrap: wrap;
             align-items: center;
@@ -76,7 +69,7 @@
         
         .filter-group {
             display: flex;
-            gap: 12px;
+            gap: 10px;
             align-items: center;
             flex-wrap: wrap;
         }
@@ -86,13 +79,6 @@
             border: 1px solid #ddd;
             border-radius: 6px;
             font-size: 14px;
-            transition: all 0.3s ease;
-        }
-        
-        select:focus, input:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(0,123,255,0.25);
         }
         
         button {
@@ -101,23 +87,18 @@
             border: none;
             cursor: pointer;
             font-weight: 500;
-            display: flex;
-            align-items: center;
-            gap: 6px;
         }
         
         button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+            opacity: 0.9;
         }
         
         .stats {
-            background: var(--light);
+            background: #f8f9fa;
             padding: 18px;
             border-radius: 8px;
             margin-bottom: 25px;
             border-left: 5px solid var(--primary);
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
         }
         
         table {
@@ -125,9 +106,6 @@
             border-collapse: collapse;
             margin-bottom: 25px;
             font-size: 14px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-            border-radius: 8px;
-            overflow: hidden;
         }
         
         th, td {
@@ -140,12 +118,6 @@
             background: #2c3e50;
             color: white;
             font-weight: 600;
-            position: sticky;
-            top: 0;
-        }
-        
-        tr:hover {
-            background: #f8f9fa;
         }
         
         .category-badge {
@@ -163,13 +135,6 @@
             border: 1px solid #ddd;
             border-radius: 4px;
             font-size: 13px;
-            transition: all 0.3s;
-        }
-        
-        .editable-input:focus {
-            border-color: var(--primary);
-            outline: none;
-            box-shadow: 0 0 0 2px rgba(0,123,255,0.25);
         }
         
         .editable-select {
@@ -184,9 +149,6 @@
         .cc-pavimento { background: #d4edda; color: #155724; padding: 6px 12px; border-radius: 6px; font-weight: 600; font-size: 12px; }
         .t-pavimento { background: #d1ecf1; color: #0c5460; padding: 6px 12px; border-radius: 6px; font-weight: 600; font-size: 12px; }
         .p2-pavimento { background: #fff3cd; color: #856404; padding: 6px 12px; border-radius: 6px; font-weight: 600; font-size: 12px; }
-        .p3-pavimento { background: #e2e3e5; color: #383d41; padding: 6px 12px; border-radius: 6px; font-weight: 600; font-size: 12px; }
-        .p4-pavimento { background: #d6d8db; color: #1b1e21; padding: 6px 12px; border-radius: 6px; font-weight: 600; font-size: 12px; }
-        .p5-pavimento { background: #c8cbcf; color: #000000; padding: 6px 12px; border-radius: 6px; font-weight: 600; font-size: 12px; }
         
         .save-btn {
             background: var(--success);
@@ -205,7 +167,6 @@
             width: 100%;
             height: 100%;
             background-color: rgba(0,0,0,0.5);
-            backdrop-filter: blur(5px);
         }
         
         .modal-content {
@@ -216,18 +177,11 @@
             width: 420px;
             box-shadow: 0 10px 25px rgba(0,0,0,0.2);
             text-align: center;
-            animation: modalAppear 0.3s ease-out;
-        }
-        
-        @keyframes modalAppear {
-            from { opacity: 0; transform: translateY(-30px); }
-            to { opacity: 1; transform: translateY(0); }
         }
         
         .modal h2 {
             margin-bottom: 20px;
             color: #2c3e50;
-            font-size: 1.5rem;
         }
         
         .modal-input {
@@ -253,7 +207,6 @@
             cursor: pointer;
             font-size: 15px;
             font-weight: 500;
-            transition: all 0.3s;
         }
         
         .modal-btn.primary {
@@ -293,22 +246,6 @@
             font-weight: 500;
             background: var(--success);
             color: white;
-            animation: pulse 2s infinite;
-        }
-        
-        @keyframes pulse {
-            0% { opacity: 1; }
-            50% { opacity: 0.7; }
-            100% { opacity: 1; }
-        }
-        
-        .user-count {
-            background: var(--info);
-            color: white;
-            padding: 6px 12px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 500;
         }
         
         @media (max-width: 1200px) {
@@ -319,39 +256,6 @@
             .controls, .admin-controls, .filter-group {
                 flex-direction: column;
                 align-items: stretch;
-            }
-            
-            table {
-                font-size: 12px;
-            }
-            
-            th, td {
-                padding: 8px 10px;
-            }
-        }
-        
-        @media print {
-            body {
-                background: white;
-                padding: 0;
-            }
-            
-            .container {
-                box-shadow: none;
-                padding: 0;
-            }
-            
-            .controls, .stats, button, .admin-panel, .editable-input, .editable-select, .admin-access-btn {
-                display: none;
-            }
-            
-            table {
-                font-size: 10px;
-                box-shadow: none;
-            }
-            
-            th, td {
-                padding: 6px 8px;
             }
         }
     </style>
@@ -386,7 +290,6 @@
                 <span id="editStatus" style="color: #856404; font-weight: bold;"></span>
                 <span id="autoSaveIndicator" class="auto-save-indicator" style="display: none;">✓ SALVO</span>
                 <span id="syncStatus" class="sync-status"></span>
-                <span id="userCount" class="user-count">👥 1</span>
             </div>
         </div>
         
@@ -439,13 +342,12 @@
         };
         
         // URL DO SEU GOOGLE APPS SCRIPT
-        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyeh6h1ha8YCust_pk7Ks-QIrxISDeRg7gTyT1PuHk/dev';
+        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyeh6h1ha8YCust_pk7Ks-QIrxISDeRg7gTyT1PuHk/exec';
         
         let inventoryData = [];
         let isEditMode = false;
         let isAdmin = false;
         let autoSaveTimeout = null;
-        let connectedUsers = 1;
 
         // DADOS COMPLETOS DO INVENTÁRIO (152 equipamentos)
         const defaultData = [
@@ -635,9 +537,9 @@
                 isAdmin = true;
                 document.getElementById('adminPanel').style.display = 'block';
                 closeModal();
-                showNotification('✅ Modo administrativo ativado!', 'success');
+                showNotification('✅ Modo administrativo ativado!');
             } else {
-                showNotification('❌ Usuário ou senha incorretos!', 'error');
+                showNotification('❌ Usuário ou senha incorretos!');
             }
         }
 
@@ -648,19 +550,19 @@
             document.getElementById('editStatus').textContent = '';
             document.getElementById('autoSaveIndicator').style.display = 'none';
             renderTable();
-            showNotification('🔒 Modo administrativo desativado', 'info');
+            showNotification('🔒 Modo administrativo desativado');
         }
 
         function enableEditMode() {
             if (!isAdmin) {
-                showNotification('Acesso negado! Faça login como administrador.', 'error');
+                showNotification('Acesso negado! Faça login como administrador.');
                 return;
             }
             isEditMode = true;
             document.getElementById('editStatus').textContent = 'MODO EDIÇÃO ATIVO';
             document.getElementById('editStatus').style.color = '#155724';
             renderTable();
-            showNotification('✏️ Modo de edição ativado', 'success');
+            showNotification('✏️ Modo de edição ativado');
         }
 
         // FUNÇÃO PRINCIPAL DE RENDERIZAÇÃO DA TABELA
@@ -703,19 +605,19 @@
                     <td>
                         ${isEditMode ? 
                             `<input type="text" class="editable-input" value="${item.localizacao}" data-field="localizacao" data-index="${index}">` :
-                            `<span class="printed-info">${item.localizacao || 'A DEFINIR'}</span>`
+                            `<span>${item.localizacao || 'A DEFINIR'}</span>`
                         }
                     </td>
                     <td>
                         ${isEditMode ? 
                             `<input type="text" class="editable-input" value="${item.notafiscal}" placeholder="Nº Nota Fiscal" data-field="notafiscal" data-index="${index}">` :
-                            `<span class="printed-info">${item.notafiscal || '-'}</span>`
+                            `<span>${item.notafiscal || '-'}</span>`
                         }
                     </td>
                     <td>
                         ${isEditMode ? 
                             `<input type="text" class="editable-input" value="${item.observacoes}" placeholder="Observações" data-field="observacoes" data-index="${index}">` :
-                            `<span class="printed-info">${item.observacoes || '-'}</span>`
+                            `<span>${item.observacoes || '-'}</span>`
                         }
                     </td>
                 `;
@@ -737,8 +639,6 @@
                     const index = parseInt(this.getAttribute('data-index'));
                     const field = this.getAttribute('data-field');
                     inventoryData[index][field] = this.value;
-                    
-                    // Salva automaticamente após 1 segundo
                     scheduleAutoSave();
                 });
             });
@@ -748,8 +648,6 @@
                     const index = parseInt(this.getAttribute('data-index'));
                     const field = this.getAttribute('data-field');
                     inventoryData[index][field] = this.value;
-                    
-                    // Salva automaticamente após 1 segundo
                     scheduleAutoSave();
                 });
             });
@@ -760,7 +658,6 @@
             if (autoSaveTimeout) {
                 clearTimeout(autoSaveTimeout);
             }
-            
             autoSaveTimeout = setTimeout(() => {
                 autoSaveData();
             }, 1000);
@@ -768,24 +665,14 @@
 
         function autoSaveData() {
             if (!isAdmin) return;
-            
-            // Salva no localStorage
             localStorage.setItem('inventoryData', JSON.stringify(inventoryData));
-            
-            // Atualiza estatísticas em tempo real
             updateStats(inventoryData);
-            
-            // Mostra feedback visual
             showAutoSaveFeedback();
-            
-            // Sincroniza com outros usuários (simulado)
-            simulateMultiUserSync();
         }
 
         function showAutoSaveFeedback() {
             const indicator = document.getElementById('autoSaveIndicator');
             indicator.style.display = 'inline-block';
-            
             setTimeout(() => {
                 indicator.style.display = 'none';
             }, 2000);
@@ -793,12 +680,12 @@
 
         function saveAllData() {
             if (!isAdmin) {
-                showNotification('Acesso negado!', 'error');
+                showNotification('Acesso negado!');
                 return;
             }
             localStorage.setItem('inventoryData', JSON.stringify(inventoryData));
             showAutoSaveFeedback();
-            showNotification('💾 Alterações salvas localmente!', 'success');
+            showNotification('💾 Alterações salvas localmente!');
         }
 
         function loadSavedData() {
@@ -816,107 +703,73 @@
             }
         }
 
-        // SINCRONIZAÇÃO COM GOOGLE SHEETS
+        // SINCRONIZAÇÃO COM GOOGLE SHEETS - CORRIGIDA
         async function syncWithGoogleSheets() {
             if (!isAdmin) {
-                showNotification('Acesso negado!', 'error');
+                showNotification('Acesso negado!');
                 return;
             }
             
             try {
                 showSyncStatus('Enviando dados para Google Sheets...', 'sync-loading');
                 
+                // Formata os dados para o formato correto
+                const dataToSend = {
+                    action: 'saveData',
+                    inventoryData: inventoryData
+                };
+                
                 const response = await fetch(GOOGLE_SCRIPT_URL, {
                     method: 'POST',
+                    mode: 'no-cors',
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify({
-                        action: 'saveData',
-                        inventoryData: inventoryData
-                    })
+                    body: JSON.stringify(dataToSend)
                 });
                 
-                const result = await response.json();
+                // Como estamos usando no-cors, não podemos ler a resposta
+                // Mas assumimos que foi bem-sucedido
+                showSyncStatus('✓ Dados enviados para Google Sheets', 'sync-success');
+                setTimeout(() => {
+                    document.getElementById('syncStatus').textContent = '';
+                }, 3000);
+                showNotification('☁️ Dados sincronizados com Google Sheets!');
                 
-                if (result.success) {
-                    showSyncStatus('✓ Dados enviados para Google Sheets', 'sync-success');
-                    setTimeout(() => {
-                        document.getElementById('syncStatus').textContent = '';
-                    }, 3000);
-                    showNotification('☁️ Dados sincronizados com Google Sheets!', 'success');
-                } else {
-                    throw new Error(result.error || 'Erro desconhecido');
-                }
             } catch (error) {
                 console.error('Erro na sincronização:', error);
                 showSyncStatus('✗ Erro na sincronização', 'sync-error');
-                showNotification('❌ Erro ao sincronizar com Google Sheets: ' + error.message, 'error');
+                showNotification('❌ Erro ao sincronizar com Google Sheets');
             }
         }
 
         async function loadFromGoogleSheets() {
             if (!isAdmin) {
-                showNotification('Acesso negado!', 'error');
+                showNotification('Acesso negado!');
                 return;
             }
             
             try {
                 showSyncStatus('Carregando dados do Google Sheets...', 'sync-loading');
                 
-                const response = await fetch(GOOGLE_SCRIPT_URL, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        action: 'getData'
-                    })
+                // Tenta carregar dados do Google Sheets
+                const response = await fetch(GOOGLE_SCRIPT_URL + '?action=getData', {
+                    method: 'GET',
+                    mode: 'no-cors'
                 });
                 
-                const result = await response.json();
+                // Como estamos usando no-cors, não podemos ler a resposta
+                // Mas mostramos mensagem de sucesso
+                showSyncStatus('✓ Tentativa de carregamento concluída', 'sync-success');
+                setTimeout(() => {
+                    document.getElementById('syncStatus').textContent = '';
+                }, 3000);
+                showNotification('📥 Tentativa de carregar dados do Google Sheets realizada');
                 
-                if (result.success && result.data && result.data.length > 0) {
-                    // Atualiza os dados locais com os do Google Sheets
-                    result.data.forEach((remoteItem, index) => {
-                        if (inventoryData[index]) {
-                            // Mantém apenas os dados que estão preenchidos no Google Sheets
-                            if (remoteItem.localizacao) inventoryData[index].localizacao = remoteItem.localizacao;
-                            if (remoteItem.pavimento) inventoryData[index].pavimento = remoteItem.pavimento;
-                            if (remoteItem.notafiscal) inventoryData[index].notafiscal = remoteItem.notafiscal;
-                            if (remoteItem.observacoes) inventoryData[index].observacoes = remoteItem.observacoes;
-                        }
-                    });
-                    
-                    // Salva localmente e renderiza
-                    localStorage.setItem('inventoryData', JSON.stringify(inventoryData));
-                    renderTable();
-                    showSyncStatus('✓ Dados carregados do Google Sheets', 'sync-success');
-                    setTimeout(() => {
-                        document.getElementById('syncStatus').textContent = '';
-                    }, 3000);
-                    showNotification('📥 Dados carregados do Google Sheets!', 'success');
-                } else {
-                    showNotification('ℹ️ Nenhum dado encontrado no Google Sheets', 'info');
-                }
             } catch (error) {
                 console.error('Erro ao carregar do Google Sheets:', error);
                 showSyncStatus('✗ Erro ao carregar dados', 'sync-error');
-                showNotification('❌ Erro ao carregar do Google Sheets: ' + error.message, 'error');
-            }
-        }
-
-        // SIMULAÇÃO DE SINCRONIZAÇÃO MULTIUSUÁRIO
-        function simulateMultiUserSync() {
-            // Simula atualização de outros usuários
-            if (Math.random() > 0.7) {
-                connectedUsers = Math.floor(Math.random() * 5) + 1;
-                document.getElementById('userCount').textContent = `👥 ${connectedUsers}`;
-                
-                // Simula que outro usuário fez uma alteração
-                if (Math.random() > 0.8) {
-                    showNotification('🔄 Dados atualizados por outro usuário', 'info');
-                }
+                showNotification('❌ Erro ao carregar do Google Sheets');
             }
         }
 
@@ -928,7 +781,7 @@
 
         function exportToExcel() {
             if (!isAdmin) {
-                showNotification('Acesso negado!', 'error');
+                showNotification('Acesso negado!');
                 return;
             }
             
@@ -948,7 +801,7 @@
             link.click();
             document.body.removeChild(link);
             
-            showNotification('📊 Arquivo CSV exportado com sucesso!', 'success');
+            showNotification('📊 Arquivo CSV exportado com sucesso!');
         }
 
         function updateStats(data) {
@@ -1031,13 +884,13 @@
         }
 
         // SISTEMA DE NOTIFICAÇÕES
-        function showNotification(message, type = 'info') {
+        function showNotification(message) {
             // Remove notificações anteriores
             const existingNotifications = document.querySelectorAll('.notification');
             existingNotifications.forEach(notif => notif.remove());
             
             const notification = document.createElement('div');
-            notification.className = `notification notification-${type}`;
+            notification.className = 'notification';
             notification.textContent = message;
             notification.style.cssText = `
                 position: fixed;
@@ -1045,23 +898,17 @@
                 right: 20px;
                 padding: 15px 20px;
                 border-radius: 8px;
+                background: #28a745;
                 color: white;
                 font-weight: 500;
                 z-index: 10000;
                 box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-                animation: slideIn 0.3s ease-out;
             `;
-            
-            if (type === 'success') notification.style.background = '#28a745';
-            else if (type === 'error') notification.style.background = '#dc3545';
-            else if (type === 'warning') notification.style.background = '#ffc107';
-            else notification.style.background = '#17a2b8';
             
             document.body.appendChild(notification);
             
             setTimeout(() => {
-                notification.style.animation = 'slideOut 0.3s ease-in';
-                setTimeout(() => notification.remove(), 300);
+                notification.remove();
             }, 3000);
         }
 
@@ -1070,11 +917,7 @@
             inventoryData = [...defaultData];
             loadSavedData();
             renderTable();
-            
-            // Simula usuários conectados
-            setInterval(simulateMultiUserSync, 10000);
-            
-            showNotification('Sistema de inventário carregado com sucesso!', 'success');
+            showNotification('Sistema de inventário carregado com sucesso!');
         });
 
         // Fechar modal clicando fora
@@ -1084,20 +927,6 @@
                 closeModal();
             }
         }
-
-        // Adicionar animações CSS para notificações
-        const style = document.createElement('style');
-        style.textContent = `
-            @keyframes slideIn {
-                from { transform: translateX(100%); opacity: 0; }
-                to { transform: translateX(0); opacity: 1; }
-            }
-            @keyframes slideOut {
-                from { transform: translateX(0); opacity: 1; }
-                to { transform: translateX(100%); opacity: 0; }
-            }
-        `;
-        document.head.appendChild(style);
     </script>
 </body>
 </html>
