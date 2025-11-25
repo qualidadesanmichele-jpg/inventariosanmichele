@@ -6,7 +6,6 @@
     <title>Inventário San Michele - Sistema Sincronizado</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* SEU CSS EXISTENTE (mantenha todo o CSS que você já tem) */
         :root {
             --primary: #2c5aa0;
             --primary-dark: #1e3d72;
@@ -700,7 +699,7 @@
                 
                 <div class="search-box">
                     <i class="fas fa-search"></i>
-                    <input type="text" id="searchInput" placeholder="Buscar equipamento...">
+                    <input type="text" id="searchInput" placeholder="Buscar equipamento..." onkeyup="filterTable()">
                 </div>
                 
                 <button onclick="filterTable()">
@@ -747,7 +746,7 @@
             password: "sanmichele2025"
         };
         
-        // URL DO SEU GOOGLE APPS SCRIPT - ATUALIZE COM SUA URL
+        // URL DO SEU GOOGLE APPS SCRIPT
         const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyeh6h1ha8YCust_pk7Ks-QIrxISDeRg7gTyT1PuHk/dev';
         
         let inventoryData = [];
@@ -758,13 +757,371 @@
         let realTimeSyncInterval = null;
         let isRealTimeSyncActive = false;
 
-        // DADOS COMPLETOS DO INVENTÁRIO (mantenha seus dados existentes aqui)
+        // DADOS COMPLETOS DO INVENTÁRIO (152 equipamentos)
         const defaultData = [
-            // SEUS DADOS EXISTENTES AQUI (152 equipamentos)
-            // ... (mantenha todo o array defaultData que você já tem)
+            // ROTEADORES (21 equipamentos)
+            { categoria: "Roteador", modelo: "Ubiquiti U6 Pro", pavimento: "T", localizacao: "Corredor Direito", notafiscal: "", observacoes: "" },
+            { categoria: "Roteador", modelo: "Ubiquiti U6 Pro", pavimento: "T", localizacao: "Corredor Exames Cdof", notafiscal: "", observacoes: "" },
+            { categoria: "Roteador", modelo: "Ubiquiti U6 Pro", pavimento: "P3", localizacao: "Corredor Esquerdo Do Adm", notafiscal: "", observacoes: "" },
+            { categoria: "Roteador", modelo: "Ubiquiti U6 Pro", pavimento: "T", localizacao: "asDASAD", notafiscal: "", observacoes: "" },
+            { categoria: "Roteador", modelo: "Ubiquiti U6 Pro", pavimento: "", localizacao: "A DEFINIR", notafiscal: "", observacoes: "" },
+            { categoria: "Roteador", modelo: "Ubiquiti U6 Pro", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Roteador", modelo: "Ubiquiti U6 Pro", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Roteador", modelo: "Ubiquiti U6 Pro", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Roteador", modelo: "Ubiquiti U6 Pro", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Roteador", modelo: "Ubiquiti U6 Pro", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Roteador", modelo: "Ubiquiti U6 Pro", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Roteador", modelo: "Ubiquiti U6 Pro", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Roteador", modelo: "Ubiquiti U6 Pro", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Roteador", modelo: "Ubiquiti U6 Pro", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Roteador", modelo: "Ubiquiti U6 Pro", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Roteador", modelo: "Ubiquiti U6 Pro", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Roteador", modelo: "Ubiquiti U6 Pro", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Roteador", modelo: "Ubiquiti U6 Pro", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Roteador", modelo: "Ubiquiti U6 Pro", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Roteador", modelo: "Ubiquiti U6 Pro", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Roteador", modelo: "Ubiquiti U6 Pro", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+
+            // SWITCHES (16 equipamentos)
+            { categoria: "Switch", modelo: "TPlink SG3452", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Switch", modelo: "TPlink SG3452", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Switch", modelo: "TPlink SG3452", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Switch", modelo: "TPlink SG3452", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Switch", modelo: "TPlink SG3452", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Switch", modelo: "TPlink SG3452", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Switch", modelo: "TPlink SG3452", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Switch", modelo: "TPlink SG3452", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Switch", modelo: "TPlink SG3452", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Switch", modelo: "TPlink SG3452", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Switch", modelo: "Hikvision", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Switch", modelo: "Hikvision", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Switch", modelo: "Hikvision", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Switch", modelo: "Hikvision", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Switch", modelo: "Hikvision", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Switch", modelo: "Hikvision", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+
+            // COMPUTADORES (37 equipamentos)
+            { categoria: "Computador", modelo: "Dell AIO 5430", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Computador", modelo: "Dell AIO 5430", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Computador", modelo: "Dell AIO 5430", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Computador", modelo: "Dell AIO 5430", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Computador", modelo: "Dell AIO 5430", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Computador", modelo: "Dell AIO 5430", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Computador", modelo: "Dell AIO 5430", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Computador", modelo: "Dell AIO 5430", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Computador", modelo: "Dell AIO 5430", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Computador", modelo: "Dell AIO 5430", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Computador", modelo: "Dell AIO 5430", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Computador", modelo: "Dell AIO 5430", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Computador", modelo: "Dell AIO 5430", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Computador", modelo: "Dell AIO 5430", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Computador", modelo: "Dell AIO 5430", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Computador", modelo: "Dell AIO 5430", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Computador", modelo: "Dell AIO 5430", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Computador", modelo: "Dell AIO 5430", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Computador", modelo: "Dell AIO 5430", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Computador", modelo: "Dell AIO 5430", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Computador", modelo: "Dell AIO 5430", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Computador", modelo: "Dell AIO 5430", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Computador", modelo: "Dell AIO 5430", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Computador", modelo: "Dell AIO 5430", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Computador", modelo: "Dell AIO 5430", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Computador", modelo: "Dell AIO 5430", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Computador", modelo: "Dell AIO 5430", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Computador", modelo: "Dell AIO 5430", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Computador", modelo: "Dell AIO 5430", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Computador", modelo: "Dell AIO 5430", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Computador", modelo: "Dell AIO 5430", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Computador", modelo: "Dell AIO 5430", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Computador", modelo: "Dell AIO 5430", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Computador", modelo: "Dell Optiplex 7050 Micro", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Computador", modelo: "Dell Optiplex 7050 Micro", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Computador", modelo: "Dell Optiplex 7010 Micro", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Computador", modelo: "Dell Optiplex 7010 Micro", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+
+            // NOTEBOOKS (11 equipamentos)
+            { categoria: "Notebook", modelo: "Dell Inspiron 15 3520", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Notebook", modelo: "Dell Inspiron 15 3520", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Notebook", modelo: "Dell Inspiron 15 3520", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Notebook", modelo: "Dell Inspiron 15 3520", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Notebook", modelo: "Dell Inspiron 15 3520", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Notebook", modelo: "Dell Inspiron 15 3520", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Notebook", modelo: "Dell Inspiron 15 3520", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Notebook", modelo: "Dell Inspiron 15 3530", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Notebook", modelo: "Acer Aspire 5", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Notebook", modelo: "Acer Aspire 5", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Notebook", modelo: "Acer Aspire 5", pavimento: "", localizacao: "", notafiscal: "", observacoes: "" },
+
+            // MÁQUINAS MÉDICAS ORIGINAIS (22 equipamentos)
+            { categoria: "Máquinas Médicas", modelo: "Argos", pavimento: "T", localizacao: "Cdof - Exame 01", notafiscal: "", observacoes: "" },
+            { categoria: "Máquinas Médicas", modelo: "Galilei", pavimento: "T", localizacao: "Cdof - Exame 02", notafiscal: "", observacoes: "" },
+            { categoria: "Máquinas Médicas", modelo: "Laser Retina", pavimento: "T", localizacao: "Cdof - Exame 03", notafiscal: "", observacoes: "" },
+            { categoria: "Máquinas Médicas", modelo: "Estereofoto", pavimento: "T", localizacao: "Cdof - Exame 04", notafiscal: "", observacoes: "" },
+            { categoria: "Máquinas Médicas", modelo: "Yag Laser", pavimento: "T", localizacao: "Cdof - Exame 05", notafiscal: "", observacoes: "" },
+            { categoria: "Máquinas Médicas", modelo: "Topografia", pavimento: "T", localizacao: "Cdof - Exame 06", notafiscal: "", observacoes: "" },
+            { categoria: "Máquinas Médicas", modelo: "Paquimetria", pavimento: "T", localizacao: "Cdof - Exame 07", notafiscal: "", observacoes: "" },
+            { categoria: "Máquinas Médicas", modelo: "Campimetria", pavimento: "T", localizacao: "Cdof - Exame 08", notafiscal: "", observacoes: "" },
+            { categoria: "Máquinas Médicas", modelo: "Bioimetria Ultrassonica", pavimento: "T", localizacao: "Cdof - Exame 09", notafiscal: "", observacoes: "" },
+            { categoria: "Máquinas Médicas", modelo: "Ultrasson", pavimento: "T", localizacao: "Cdof - Exame 11", notafiscal: "", observacoes: "" },
+            { categoria: "Máquinas Médicas", modelo: "Auto Refrator/Auto Kerato", pavimento: "T", localizacao: "Recepção Pré - Consulta", notafiscal: "", observacoes: "" },
+            { categoria: "Máquinas Médicas", modelo: "Tonometro Do Sopro", pavimento: "T", localizacao: "Recepção Pré - Consulta", notafiscal: "", observacoes: "" },
+            { categoria: "Máquinas Médicas", modelo: "Lensometro/ Lensmeter Digital", pavimento: "T", localizacao: "Recepção Pré - Consulta", notafiscal: "", observacoes: "" },
+            { categoria: "Máquinas Médicas", modelo: "Lâmpada De Fenda Topcon", pavimento: "T", localizacao: "Consultório 3", notafiscal: "", observacoes: "" },
+            { categoria: "Máquinas Médicas", modelo: "Cadeira Xenonio", pavimento: "T", localizacao: "Consultório 3", notafiscal: "", observacoes: "" },
+            { categoria: "Máquinas Médicas", modelo: "Refrator Manuel Topcon", pavimento: "T", localizacao: "Consultório 3", notafiscal: "", observacoes: "" },
+            { categoria: "Máquinas Médicas", modelo: "Lâmpada De Fenda Topcon", pavimento: "T", localizacao: "Consultório 1", notafiscal: "", observacoes: "" },
+            { categoria: "Máquinas Médicas", modelo: "Cadeira Xenonio", pavimento: "T", localizacao: "Consultório 1", notafiscal: "", observacoes: "" },
+            { categoria: "Máquinas Médicas", modelo: "Refrator Manuel Topcon", pavimento: "T", localizacao: "Consultório 1", notafiscal: "", observacoes: "" },
+            { categoria: "Máquinas Médicas", modelo: "Lâmpada De Fenda Apramed", pavimento: "T", localizacao: "Consultório 2", notafiscal: "", observacoes: "" },
+            { categoria: "Máquinas Médicas", modelo: "Cadeira Apramed", pavimento: "T", localizacao: "Consultório 2", notafiscal: "", observacoes: "" },
+            { categoria: "Máquinas Médicas", modelo: "Refrator Manuel Topcon", pavimento: "T", localizacao: "Consultório 2", notafiscal: "", observacoes: "" },
+
+            // CONTROLE DE ACESSO (6 equipamentos)
+            { categoria: "Controle De Acesso", modelo: "SS 3420 MF BIO", pavimento: "Não Especificado!", localizacao: "Elevador 7 Paradas SS2", notafiscal: "", observacoes: "" },
+            { categoria: "Controle De Acesso", modelo: "SS 3420 MF BIO", pavimento: "T", localizacao: "Elevador 7 Paradas Térreo", notafiscal: "", observacoes: "" },
+            { categoria: "Controle De Acesso", modelo: "SS 3420 MF BIO", pavimento: "Não Especificado!", localizacao: "Elevador 7 Paradas SS1", notafiscal: "", observacoes: "" },
+            { categoria: "Controle De Acesso", modelo: "SS 3420 MF BIO", pavimento: "Não Especificado!", localizacao: "Elevador 5 Paradas", notafiscal: "", observacoes: "" },
+            { categoria: "Controle De Acesso", modelo: "CT 3000 4PB", pavimento: "P2", localizacao: "Catraca Segundo Piso", notafiscal: "", observacoes: "" },
+            { categoria: "Controle De Acesso", modelo: "SS 3420 MF BIO", pavimento: "Não Especificado!", localizacao: "Acesso Funcionários SS1", notafiscal: "", observacoes: "" },
+
+            // EQUIPAMENTOS DO CENTRO CIRÚRGICO (39 equipamentos)
+            { categoria: "Máquinas Médicas", modelo: "CARDIOVERSOR UMED20 (MINDRAY)", pavimento: "CC", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Máquinas Médicas", modelo: "CARDIOVERSOR UMED20 (MINDRAY)", pavimento: "CC", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Máquinas Médicas", modelo: "FOCO CIRURGICO ACCESS 400/400 SF 1011 (VOLISTA)", pavimento: "CC", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Máquinas Médicas", modelo: "FOCO CIRURGICO ACCESS 400/400 SF 1011 (VOLISTA)", pavimento: "CC", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Máquinas Médicas", modelo: "FOCO CIRURGICO ACCESS 400/400 SF 1011 (VOLISTA)", pavimento: "CC", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Máquinas Médicas", modelo: "MONITOR MULTIPARÂMETRO UMEC-12 (MINDRAY)", pavimento: "CC", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Máquinas Médicas", modelo: "ESTATIVA DE TETO MODUEVO PLG II (GETINGE)", pavimento: "CC", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Máquinas Médicas", modelo: "APARELHO DE ANESTESIA WATO EX-35 (MINDRAY)", pavimento: "CC", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Máquinas Médicas", modelo: "MESA OFTALMOLOGICA ZNZ100 (APRAMED)", pavimento: "CC", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Máquinas Médicas", modelo: "ESTATIVA DE TETO MODUEVO PLG II (GETINGE)", pavimento: "CC", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Máquinas Médicas", modelo: "MICROSCÓPIO CIRÚRGICO CARL ZEISS (-)", pavimento: "CC", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Máquinas Médicas", modelo: "APARELHO DE ANESTESIA WATO EX-35 (MINDRAY)", pavimento: "CC", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Máquinas Médicas", modelo: "MESA CIRÚRGICA MAQUET LYRA (GETINGE)", pavimento: "CC", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Máquinas Médicas", modelo: "MESA CIRÚRGICA MAQUET LYRA (GETINGE)", pavimento: "CC", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Máquinas Médicas", modelo: "CONSTELLATION VISION SYSTEM (ALCON)", pavimento: "CC", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Máquinas Médicas", modelo: "DESFIBRILADOR EXTERNO AUTOMÁTICO ION (INSTRAMED)", pavimento: "CC", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Máquinas Médicas", modelo: "BISTURI ELETRÔNICO SS-501 SX (WEM)", pavimento: "CC", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Máquinas Médicas", modelo: "BISTURI ELETRÔNICO SS-501 SX (WEM)", pavimento: "CC", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Máquinas Médicas", modelo: "FONTE DE LUZ L9000 (STRYKER)", pavimento: "CC", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Máquinas Médicas", modelo: "PROCESSADORA DE VIDEO 1588 (STRYKER)", pavimento: "CC", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Máquinas Médicas", modelo: "INSUFLADOR PNEUMO SURE XL (STRYKER)", pavimento: "CC", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Máquinas Médicas", modelo: "CONSOLE DE ARTROSCOPIA 5400-50 (STRYKER)", pavimento: "CC", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Máquinas Médicas", modelo: "SISTEMA DE VISUALIZAÇÃO 3D NOENUITY (ALCON)", pavimento: "CC", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Máquinas Médicas", modelo: "MICROSCÓPIO CIRÚRGICO OPMI LUMERA I (CARL ZEISS MEDITEC AG)", pavimento: "CC", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Máquinas Médicas", modelo: "CENTURION VISION SYSTEM (ALCON)", pavimento: "CC", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Máquinas Médicas", modelo: "MONITOR MULTIPARÂMETRO UMEC-12 (MINDRAY)", pavimento: "CC", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Máquinas Médicas", modelo: "OXIMETRO DE DEDO 512FLH (MINDRAY)", pavimento: "CC", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Máquinas Médicas", modelo: "OXIMETRO DE DEDO 512FLH (MINDRAY)", pavimento: "CC", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Máquinas Médicas", modelo: "ARCO CIRURGICO UNIQUE CLASS (IMEX MEDICAL)", pavimento: "CC", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Máquinas Médicas", modelo: "CANETA DE BISTURI MANUAL (SC)", pavimento: "CC", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Máquinas Médicas", modelo: "EQUIPO PRIMAX CART 04 PONTAS N 737 (DENT CLER)", pavimento: "CC", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Máquinas Médicas", modelo: "MESA OFTALMOLOGICA MAQUET LYRA (GETINGE)", pavimento: "CC", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Máquinas Médicas", modelo: "BISTURI ELETRÔNICO SS-501 SX (WEM)", pavimento: "CC", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Máquinas Médicas", modelo: "BISTURI ELETRÔNICO HF-120 (WEM)", pavimento: "CC", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Máquinas Médicas", modelo: "UNIDADE DE AQUECIMENTO VITIGOV (WARMTOUCH)", pavimento: "CC", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Máquinas Médicas", modelo: "PINÇA COM CABO - (-)", pavimento: "CC", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Máquinas Médicas", modelo: "CANETA DE BISTURI MANUAL (SC)", pavimento: "CC", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Máquinas Médicas", modelo: "APARELHO DE ANESTESIA EX 65 (MINDRAY)", pavimento: "CC", localizacao: "", notafiscal: "", observacoes: "" },
+            { categoria: "Máquinas Médicas", modelo: "VALVILLA DE INTROGENIO RD-29N (WHITE MARTINS)", pavimento: "CC", localizacao: "", notafiscal: "", observacoes: "" }
         ];
 
-        // NOVAS FUNÇÕES PARA SINCRONIZAÇÃO EM TEMPO REAL
+        // FUNÇÕES DO MODAL
+        function openModal() {
+            document.getElementById('loginModal').style.display = 'block';
+            document.getElementById('adminUser').focus();
+        }
+
+        function closeModal() {
+            document.getElementById('loginModal').style.display = 'none';
+            document.getElementById('adminUser').value = '';
+            document.getElementById('adminPassword').value = '';
+        }
+
+        function login() {
+            const user = document.getElementById('adminUser').value;
+            const password = document.getElementById('adminPassword').value;
+            
+            if (user === ADMIN_CREDENTIALS.user && password === ADMIN_CREDENTIALS.password) {
+                isAdmin = true;
+                localStorage.setItem('isAdmin', 'true');
+                document.getElementById('adminPanel').style.display = 'block';
+                closeModal();
+                showNotification('✅ Modo administrativo ativado!', 'success');
+            } else {
+                showNotification('❌ Usuário ou senha incorretos!', 'error');
+            }
+        }
+
+        function logout() {
+            isAdmin = false;
+            isEditMode = false;
+            localStorage.setItem('isAdmin', 'false');
+            document.getElementById('adminPanel').style.display = 'none';
+            document.getElementById('editStatus').textContent = '';
+            document.getElementById('autoSaveIndicator').style.display = 'none';
+            
+            // Desativar sincronização em tempo real
+            if (isRealTimeSyncActive) {
+                disableRealTimeSync();
+            }
+            
+            renderTable();
+            showNotification('🔒 Modo administrativo desativado', 'info');
+        }
+
+        function enableEditMode() {
+            if (!isAdmin) {
+                showNotification('Acesso negado! Faça login como administrador.', 'error');
+                return;
+            }
+            isEditMode = true;
+            document.getElementById('editStatus').textContent = 'MODO EDIÇÃO ATIVO';
+            document.getElementById('editStatus').style.color = '#155724';
+            renderTable();
+            showNotification('✏️ Modo de edição ativado', 'success');
+        }
+
+        // FUNÇÃO PRINCIPAL DE RENDERIZAÇÃO DA TABELA
+        function renderTable(data = inventoryData) {
+            const tableBody = document.getElementById('tableBody');
+            tableBody.innerHTML = '';
+            
+            data.forEach((item, index) => {
+                const row = document.createElement('tr');
+                if (isEditMode) {
+                    row.classList.add('edit-mode');
+                }
+                
+                let pavimentoClass = '';
+                if (item.pavimento === 'CC') pavimentoClass = 'cc-pavimento';
+                else if (item.pavimento === 'T') pavimentoClass = 't-pavimento';
+                else if (item.pavimento === 'P2') pavimentoClass = 'p2-pavimento';
+                else if (item.pavimento === 'P3') pavimentoClass = 'p3-pavimento';
+                else if (item.pavimento === 'P4') pavimentoClass = 'p4-pavimento';
+                else if (item.pavimento === 'P5') pavimentoClass = 'p5-pavimento';
+                else if (item.pavimento === 'Não Especificado!') pavimentoClass = 'p2-pavimento';
+                
+                row.innerHTML = `
+                    <td><span class="category-badge">${item.categoria || 'Não especificado'}</span></td>
+                    <td>${item.modelo || 'Não especificado'}</td>
+                    <td>
+                        ${isEditMode ? 
+                            `<select class="editable-select" data-field="pavimento" data-index="${index}">
+                                <option value="">Selecione</option>
+                                <option value="T" ${item.pavimento === 'T' ? 'selected' : ''}>T - Térreo</option>
+                                <option value="P2" ${item.pavimento === 'P2' ? 'selected' : ''}>P2 - Segundo Andar</option>
+                                <option value="P3" ${item.pavimento === 'P3' ? 'selected' : ''}>P3 - Terceiro Andar</option>
+                                <option value="P4" ${item.pavimento === 'P4' ? 'selected' : ''}>P4 - Quarto Andar</option>
+                                <option value="P5" ${item.pavimento === 'P5' ? 'selected' : ''}>P5 - Quinto Andar</option>
+                                <option value="CC" ${item.pavimento === 'CC' ? 'selected' : ''}>CC - Centro Cirúrgico</option>
+                                <option value="Não Especificado!" ${item.pavimento === 'Não Especificado!' ? 'selected' : ''}>Não Especificado!</option>
+                            </select>` :
+                            `<span class="${pavimentoClass}">${item.pavimento || '-'}</span>`
+                        }
+                    </td>
+                    <td>
+                        ${isEditMode ? 
+                            `<input type="text" class="editable-input" value="${item.localizacao}" data-field="localizacao" data-index="${index}">` :
+                            `<span>${item.localizacao || 'A DEFINIR'}</span>`
+                        }
+                    </td>
+                    <td>
+                        ${isEditMode ? 
+                            `<input type="text" class="editable-input" value="${item.notafiscal}" placeholder="Nº Nota Fiscal" data-field="notafiscal" data-index="${index}">` :
+                            `<span>${item.notafiscal || '-'}</span>`
+                        }
+                    </td>
+                    <td>
+                        ${isEditMode ? 
+                            `<input type="text" class="editable-input" value="${item.observacoes}" placeholder="Observações" data-field="observacoes" data-index="${index}">` :
+                            `<span>${item.observacoes || '-'}</span>`
+                        }
+                    </td>
+                `;
+                tableBody.appendChild(row);
+            });
+
+            if (isEditMode) {
+                addEditListeners();
+            }
+            
+            updateStats(data);
+            populateFilters();
+        }
+
+        // LISTENERS PARA EDIÇÃO EM TEMPO REAL
+        function addEditListeners() {
+            document.querySelectorAll('.editable-input').forEach(input => {
+                input.addEventListener('input', function() {
+                    const index = parseInt(this.getAttribute('data-index'));
+                    const field = this.getAttribute('data-field');
+                    inventoryData[index][field] = this.value;
+                    scheduleAutoSave();
+                });
+            });
+
+            document.querySelectorAll('.editable-select').forEach(select => {
+                select.addEventListener('change', function() {
+                    const index = parseInt(this.getAttribute('data-index'));
+                    const field = this.getAttribute('data-field');
+                    inventoryData[index][field] = this.value;
+                    scheduleAutoSave();
+                });
+            });
+        }
+
+        // SALVAMENTO AUTOMÁTICO
+        function scheduleAutoSave() {
+            if (autoSaveTimeout) {
+                clearTimeout(autoSaveTimeout);
+            }
+            autoSaveTimeout = setTimeout(() => {
+                autoSaveData();
+            }, 1000);
+        }
+
+        function autoSaveData() {
+            if (!isAdmin) return;
+            localStorage.setItem('inventoryData', JSON.stringify(inventoryData));
+            updateStats(inventoryData);
+            showAutoSaveFeedback();
+        }
+
+        function showAutoSaveFeedback() {
+            const indicator = document.getElementById('autoSaveIndicator');
+            indicator.style.display = 'inline-block';
+            setTimeout(() => {
+                indicator.style.display = 'none';
+            }, 2000);
+        }
+
+        function saveAllData() {
+            if (!isAdmin) {
+                showNotification('Acesso negado!', 'error');
+                return;
+            }
+            localStorage.setItem('inventoryData', JSON.stringify(inventoryData));
+            showAutoSaveFeedback();
+            showNotification('💾 Alterações salvas localmente!', 'success');
+        }
+
+        function loadSavedData() {
+            const saved = localStorage.getItem('inventoryData');
+            if (saved) {
+                const savedData = JSON.parse(saved);
+                savedData.forEach((item, index) => {
+                    if (inventoryData[index]) {
+                        inventoryData[index].localizacao = item.localizacao || '';
+                        inventoryData[index].notafiscal = item.notafiscal || '';
+                        inventoryData[index].observacoes = item.observacoes || '';
+                        inventoryData[index].pavimento = item.pavimento || '';
+                    }
+                });
+            }
+        }
+
+        // SISTEMA DE SINCRONIZAÇÃO EM TEMPO REAL
         function enableRealTimeSync() {
             if (!isAdmin) {
                 showNotification('Acesso negado! Faça login como administrador.', 'error');
@@ -805,13 +1162,7 @@
 
         async function checkForUpdates() {
             try {
-                const response = await fetch(GOOGLE_SCRIPT_URL + '?action=getLastUpdate', {
-                    method: 'GET',
-                    headers: {
-                        'Cache-Control': 'no-cache',
-                        'Pragma': 'no-cache'
-                    }
-                });
+                const response = await fetch(GOOGLE_SCRIPT_URL + '?action=getLastUpdate&t=' + new Date().getTime());
                 
                 if (response.ok) {
                     const result = await response.json();
@@ -832,7 +1183,7 @@
             }
         }
 
-        // FUNÇÃO MELHORADA PARA SALVAR NO GOOGLE SHEETS
+        // SINCRONIZAÇÃO COM GOOGLE SHEETS
         async function syncWithGoogleSheets() {
             if (!isAdmin) {
                 showNotification('Acesso negado! Faça login como administrador.', 'error');
@@ -842,44 +1193,32 @@
             try {
                 showSyncStatus('Enviando dados para Google Sheets...', 'sync-loading');
                 
-                // Preparar dados para envio
                 const dataToSend = {
                     action: 'saveData',
                     inventoryData: inventoryData,
                     timestamp: new Date().toISOString()
                 };
                 
-                // Usar FormData para evitar problemas de CORS
-                const formData = new FormData();
-                formData.append('data', JSON.stringify(dataToSend));
-                
                 const response = await fetch(GOOGLE_SCRIPT_URL, {
                     method: 'POST',
-                    body: formData
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(dataToSend)
                 });
                 
-                const text = await response.text();
-                let result;
-                
-                try {
-                    result = JSON.parse(text);
-                } catch (e) {
-                    throw new Error('Resposta inválida do servidor: ' + text);
-                }
-                
-                if (result.success) {
-                    showSyncStatus('✓ Dados enviados para Google Sheets', 'sync-success');
-                    lastSyncTime = new Date();
-                    localStorage.setItem('lastSyncTime', lastSyncTime.toISOString());
-                    showNotification('☁️ Dados sincronizados com Google Sheets!', 'success');
-                    
-                    // Se a sincronização em tempo real está ativa, atualizar o indicador
-                    if (isRealTimeSyncActive) {
-                        document.getElementById('realTimeIndicator').innerHTML = 
-                            '<i class="fas fa-broadcast-tower"></i> TEMPO REAL - ' + new Date().toLocaleTimeString();
+                if (response.ok) {
+                    const result = await response.json();
+                    if (result.success) {
+                        showSyncStatus('✓ Dados enviados para Google Sheets', 'sync-success');
+                        lastSyncTime = new Date();
+                        localStorage.setItem('lastSyncTime', lastSyncTime.toISOString());
+                        showNotification('☁️ Dados sincronizados com Google Sheets!', 'success');
+                    } else {
+                        throw new Error(result.error || 'Erro desconhecido');
                     }
                 } else {
-                    throw new Error(result.error || 'Erro desconhecido do servidor');
+                    throw new Error('Erro na resposta do servidor: ' + response.status);
                 }
                 
                 setTimeout(() => {
@@ -893,7 +1232,6 @@
             }
         }
 
-        // FUNÇÃO MELHORADA PARA CARREGAR DO GOOGLE SHEETS
         async function loadFromGoogleSheets() {
             if (!isAdmin) {
                 showNotification('Acesso negado! Faça login como administrador.', 'error');
@@ -903,44 +1241,33 @@
             try {
                 showSyncStatus('Carregando dados do Google Sheets...', 'sync-loading');
                 
-                const response = await fetch(GOOGLE_SCRIPT_URL + '?action=getData&t=' + new Date().getTime(), {
-                    method: 'GET',
-                    headers: {
-                        'Cache-Control': 'no-cache',
-                        'Pragma': 'no-cache'
+                const response = await fetch(GOOGLE_SCRIPT_URL + '?action=getData&t=' + new Date().getTime());
+                
+                if (response.ok) {
+                    const result = await response.json();
+                    
+                    if (result.success && result.data) {
+                        result.data.forEach((item, index) => {
+                            if (inventoryData[index]) {
+                                inventoryData[index].localizacao = item.localizacao || '';
+                                inventoryData[index].notafiscal = item.notafiscal || '';
+                                inventoryData[index].observacoes = item.observacoes || '';
+                                inventoryData[index].pavimento = item.pavimento || '';
+                            }
+                        });
+                        
+                        localStorage.setItem('inventoryData', JSON.stringify(inventoryData));
+                        renderTable();
+                        
+                        showSyncStatus('✓ Dados carregados do Google Sheets', 'sync-success');
+                        lastSyncTime = new Date();
+                        localStorage.setItem('lastSyncTime', lastSyncTime.toISOString());
+                        showNotification('📥 Dados carregados do Google Sheets com sucesso!', 'success');
+                    } else {
+                        throw new Error(result.error || 'Dados inválidos do servidor');
                     }
-                });
-                
-                const text = await response.text();
-                let result;
-                
-                try {
-                    result = JSON.parse(text);
-                } catch (e) {
-                    throw new Error('Resposta inválida do servidor: ' + text);
-                }
-                
-                if (result.success && result.data) {
-                    // Mesclar dados mantendo a estrutura original
-                    result.data.forEach((item, index) => {
-                        if (inventoryData[index]) {
-                            // Atualizar apenas os campos editáveis, mantendo categoria e modelo originais
-                            inventoryData[index].localizacao = item.localizacao || '';
-                            inventoryData[index].notafiscal = item.notafiscal || '';
-                            inventoryData[index].observacoes = item.observacoes || '';
-                            inventoryData[index].pavimento = item.pavimento || '';
-                        }
-                    });
-                    
-                    localStorage.setItem('inventoryData', JSON.stringify(inventoryData));
-                    renderTable();
-                    
-                    showSyncStatus('✓ Dados carregados do Google Sheets', 'sync-success');
-                    lastSyncTime = new Date();
-                    localStorage.setItem('lastSyncTime', lastSyncTime.toISOString());
-                    showNotification('📥 Dados carregados do Google Sheets com sucesso!', 'success');
                 } else {
-                    throw new Error(result.error || 'Dados inválidos do servidor');
+                    throw new Error('Erro na resposta do servidor: ' + response.status);
                 }
                 
                 setTimeout(() => {
@@ -954,33 +1281,18 @@
             }
         }
 
-        // FUNÇÃO MELHORADA PARA TESTAR CONEXÃO
         async function testConnection() {
             try {
                 showSyncStatus('Testando conexão...', 'sync-loading');
                 
-                const response = await fetch(GOOGLE_SCRIPT_URL + '?action=test&t=' + new Date().getTime(), {
-                    method: 'GET',
-                    headers: {
-                        'Cache-Control': 'no-cache',
-                        'Pragma': 'no-cache'
-                    }
-                });
+                const response = await fetch(GOOGLE_SCRIPT_URL + '?action=test&t=' + new Date().getTime());
                 
-                const text = await response.text();
-                let result;
-                
-                try {
-                    result = JSON.parse(text);
-                } catch (e) {
-                    throw new Error('Resposta inválida: ' + text);
-                }
-                
-                if (response.ok && result.success) {
+                if (response.ok) {
+                    const result = await response.json();
                     showSyncStatus('✓ Conexão estabelecida', 'sync-success');
                     showNotification('✅ Conexão com Google Sheets funcionando perfeitamente!', 'success');
                 } else {
-                    throw new Error(result.error || 'Erro na resposta');
+                    throw new Error('Erro na resposta: ' + response.status);
                 }
                 
                 setTimeout(() => {
@@ -990,64 +1302,173 @@
             } catch (error) {
                 console.error('Erro no teste de conexão:', error);
                 showSyncStatus('✗ Falha na conexão', 'sync-error');
-                showNotification('❌ Falha na conexão com Google Sheets: ' + error.message, 'error');
+                showNotification('❌ Falha na conexão com Google Sheets', 'error');
             }
         }
 
-        // FUNÇÕES DO MODAL (mantenha as existentes)
-        function openModal() {
-            document.getElementById('loginModal').style.display = 'block';
-            document.getElementById('adminUser').focus();
+        function showSyncStatus(message, className) {
+            const statusElement = document.getElementById('syncStatus');
+            statusElement.textContent = message;
+            statusElement.className = `sync-status ${className}`;
         }
 
-        function closeModal() {
-            document.getElementById('loginModal').style.display = 'none';
-            document.getElementById('adminUser').value = '';
-            document.getElementById('adminPassword').value = '';
-        }
-
-        function login() {
-            const user = document.getElementById('adminUser').value;
-            const password = document.getElementById('adminPassword').value;
+        function exportToExcel() {
+            if (!isAdmin) {
+                showNotification('Acesso negado! Faça login como administrador.', 'error');
+                return;
+            }
             
-            if (user === ADMIN_CREDENTIALS.user && password === ADMIN_CREDENTIALS.password) {
-                isAdmin = true;
-                localStorage.setItem('isAdmin', 'true');
-                document.getElementById('adminPanel').style.display = 'block';
-                closeModal();
-                showNotification('✅ Modo administrativo ativado!', 'success');
+            let csv = 'Categoria,Modelo,Pavimento,Localização,Nota Fiscal,Observações\n';
+            
+            inventoryData.forEach(item => {
+                csv += `"${item.categoria || ''}","${item.modelo || ''}","${item.pavimento || ''}","${item.localizacao || ''}","${item.notafiscal || ''}","${item.observacoes || ''}"\n`;
+            });
+            
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            const url = URL.createObjectURL(blob);
+            link.setAttribute('href', url);
+            link.setAttribute('download', `inventario_san_michele_${new Date().toISOString().split('T')[0]}.csv`);
+            link.style.visibility = 'hidden';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            
+            showNotification('📊 Arquivo CSV exportado com sucesso!', 'success');
+        }
+
+        // FUNÇÕES DE FILTRO E BUSCA
+        function filterTable() {
+            const categoryFilter = document.getElementById('filterCategory').value;
+            const pavimentoFilter = document.getElementById('filterPavimento').value;
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            
+            const filteredData = inventoryData.filter(item => {
+                const matchesCategory = !categoryFilter || item.categoria === categoryFilter;
+                const matchesPavimento = !pavimentoFilter || item.pavimento === pavimentoFilter;
+                const matchesSearch = !searchTerm || 
+                    (item.modelo && item.modelo.toLowerCase().includes(searchTerm)) ||
+                    (item.localizacao && item.localizacao.toLowerCase().includes(searchTerm)) ||
+                    (item.categoria && item.categoria.toLowerCase().includes(searchTerm)) ||
+                    (item.notafiscal && item.notafiscal.toLowerCase().includes(searchTerm)) ||
+                    (item.observacoes && item.observacoes.toLowerCase().includes(searchTerm));
                 
-                // Carregar última sincronização
-                const savedLastSync = localStorage.getItem('lastSyncTime');
-                if (savedLastSync) {
-                    lastSyncTime = new Date(savedLastSync);
-                }
-            } else {
-                showNotification('❌ Usuário ou senha incorretos!', 'error');
-            }
+                return matchesCategory && matchesPavimento && matchesSearch;
+            });
+            
+            renderTable(filteredData);
         }
 
-        function logout() {
-            isAdmin = false;
-            isEditMode = false;
-            localStorage.setItem('isAdmin', 'false');
-            document.getElementById('adminPanel').style.display = 'none';
-            document.getElementById('editStatus').textContent = '';
-            document.getElementById('autoSaveIndicator').style.display = 'none';
-            
-            // Desativar sincronização em tempo real
-            if (isRealTimeSyncActive) {
-                disableRealTimeSync();
-            }
-            
+        function clearFilters() {
+            document.getElementById('filterCategory').value = '';
+            document.getElementById('filterPavimento').value = '';
+            document.getElementById('searchInput').value = '';
             renderTable();
-            showNotification('🔒 Modo administrativo desativado', 'info');
         }
 
-        // SUAS OUTRAS FUNÇÕES EXISTENTES (renderTable, enableEditMode, etc.)
-        // ... (mantenha todas as outras funções que você já tem)
+        function populateFilters() {
+            const categoryFilter = document.getElementById('filterCategory');
+            const pavimentoFilter = document.getElementById('filterPavimento');
+            
+            // Limpar opções existentes (mantendo a primeira)
+            while (categoryFilter.children.length > 1) categoryFilter.removeChild(categoryFilter.lastChild);
+            while (pavimentoFilter.children.length > 1) pavimentoFilter.removeChild(pavimentoFilter.lastChild);
+            
+            const categories = [...new Set(inventoryData.map(item => item.categoria))].filter(Boolean);
+            categories.forEach(cat => {
+                const option = document.createElement('option');
+                option.value = cat;
+                option.textContent = cat;
+                categoryFilter.appendChild(option);
+            });
+            
+            const pavimentos = [...new Set(inventoryData.map(item => item.pavimento))].filter(Boolean);
+            pavimentos.forEach(pav => {
+                const option = document.createElement('option');
+                option.value = pav;
+                option.textContent = pav;
+                pavimentoFilter.appendChild(option);
+            });
+        }
 
-        // INICIALIZAÇÃO MELHORADA
+        function updateStats(data) {
+            const stats = document.getElementById('stats');
+            const total = data.length;
+            
+            const categories = [...new Set(data.map(item => item.categoria))].filter(Boolean);
+            const categoryCounts = {};
+            categories.forEach(cat => {
+                categoryCounts[cat] = data.filter(item => item.categoria === cat).length;
+            });
+            
+            const categoryText = Object.keys(categoryCounts).map(cat => 
+                `${cat}: ${categoryCounts[cat]}`
+            ).join(' | ');
+            
+            const locationsFilled = data.filter(item => item.localizacao && item.localizacao.trim() !== '').length;
+            const fillPercentage = ((locationsFilled / total) * 100).toFixed(1);
+            
+            stats.innerHTML = `
+                <strong><i class="fas fa-chart-bar"></i> Estatísticas do Inventário:</strong>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <h3>Total de Equipamentos</h3>
+                        <div class="value">${total}</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Localizações Preenchidas</h3>
+                        <div class="value">${locationsFilled}/${total}</div>
+                        <div>(${fillPercentage}%)</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Categorias</h3>
+                        <div class="value">${categories.length}</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Última Sincronização</h3>
+                        <div class="value">${lastSyncTime ? lastSyncTime.toLocaleTimeString() : 'Nunca'}</div>
+                    </div>
+                </div>
+                <div style="margin-top: 15px; font-weight: 500;">
+                    ${categoryText}
+                </div>
+                ${isAdmin ? '<div style="margin-top: 10px; color: #856404;"><i class="fas fa-cog"></i> Modo Administrativo Ativo - Edições são salvas automaticamente</div>' : ''}
+            `;
+        }
+
+        // SISTEMA DE NOTIFICAÇÕES
+        function showNotification(message, type = 'success') {
+            const existingNotifications = document.querySelectorAll('.notification');
+            existingNotifications.forEach(notif => notif.remove());
+            
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            
+            let icon = 'fas fa-check-circle';
+            if (type === 'error') icon = 'fas fa-exclamation-circle';
+            if (type === 'warning') icon = 'fas fa-exclamation-triangle';
+            if (type === 'info') icon = 'fas fa-info-circle';
+            
+            notification.innerHTML = `
+                <i class="${icon}"></i>
+                <span>${message}</span>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.style.animation = 'slideIn 0.3s ease-out reverse';
+                    setTimeout(() => {
+                        if (notification.parentNode) {
+                            notification.remove();
+                        }
+                    }, 300);
+                }
+            }, 3000);
+        }
+
+        // INICIALIZAÇÃO
         document.addEventListener('DOMContentLoaded', function() {
             inventoryData = [...defaultData];
             loadSavedData();
@@ -1066,7 +1487,7 @@
                 }
             }
             
-            // Verificar se há dados no Google Sheets a cada 30 segundos (apenas para admin)
+            // Verificar atualizações a cada 30 segundos (apenas para admin)
             setInterval(() => {
                 if (isAdmin && !isRealTimeSyncActive) {
                     checkForUpdates();
@@ -1074,9 +1495,20 @@
             }, 30000);
         });
 
-        // MANTENHA TODAS AS SUAS OUTRAS FUNÇÕES EXISTENTES
-        // ... (todas as funções que não modifiquei acima)
-
+        // Fechar modal clicando fora
+        window.onclick = function(event) {
+            const modal = document.getElementById('loginModal');
+            if (event.target === modal) {
+                closeModal();
+            }
+        }
+        
+        // Fechar modal com ESC
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                closeModal();
+            }
+        });
     </script>
 </body>
 </html>
